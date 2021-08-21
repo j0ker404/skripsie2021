@@ -17,6 +17,7 @@ class Agent:
         '''
             Train Agent
         '''
+        pass
     
     def get_action(self, state):
         '''
