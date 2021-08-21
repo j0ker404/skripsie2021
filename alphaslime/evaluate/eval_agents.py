@@ -21,13 +21,13 @@ class EvaluateGame:
 
         #TODO: add functionality for human controlled agent
     '''
-    def __init__(self, agent_right:Agent, agent_left:Agent, base_dir_path, render=False) -> None:
+    def __init__(self, agent_right:Agent, agent_left:Agent, base_dir_path, env_id="SlimeVolley-v0", render=False) -> None:
         self.agent_right = agent_right
         self.agent_left = agent_left
         self.RENDER = render
         # base directory to save data
         self.base_dir_path = base_dir_path
-        self.env = gym.make("SlimeVolley-v0")
+        self.env = gym.make(env_id)
 
     
     def evaluate_episode(self):
