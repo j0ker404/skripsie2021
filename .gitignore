@@ -1,2 +1,4 @@
 venv/
 alphaslime/__pycache__/
+alphaslime/agents/__pycache__/
+alphaslime/evaluate/__pycache__/
