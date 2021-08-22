@@ -13,6 +13,7 @@
 import gym
 import slimevolleygym
 from ..agents.agent import Agent 
+import time
 
 class EvaluateGame:
     '''
@@ -21,14 +22,14 @@ class EvaluateGame:
 
         #TODO: add functionality for human controlled agent
     '''
-    def __init__(self, agent_right:Agent, agent_left:Agent, base_dir_path, env_id="SlimeVolley-v0", render=False) -> None:
+    def __init__(self, agent_right:Agent, agent_left:Agent, base_dir_path, env_id="SlimeVolley-v0", render=False, time_delay=0.03) -> None:
         self.agent_right = agent_right
         self.agent_left = agent_left
         self.RENDER = render
         # base directory to save data
         self.base_dir_path = base_dir_path
         self.env = gym.make(env_id)
-
+        self.delay = time_delay
     
     def evaluate_episode(self):
         '''
@@ -62,6 +63,8 @@ class EvaluateGame:
             if self.RENDER:
                 # render game to screen
                 self.env.render()
+                # sleep
+                time.sleep(self.delay)
 
         print("agent right's score:", total_reward)
         print("agent left's score:", -total_reward)
