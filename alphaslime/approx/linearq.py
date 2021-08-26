@@ -14,6 +14,12 @@ class LinearQApprox(QApprox):
         '''
             Return the approximate state-action value
             using linear combination
+
+            state: list
+
+            action: list
+
+            w: ndarray (d, 1)
         '''
         q_hat = None
         x = self.get_feature_vector(state=state, action=action)
@@ -26,5 +32,13 @@ class LinearQApprox(QApprox):
     def get_feature_vector(self, state, action):
         '''
             from state-action formulate x(s,a)
+
+            state: list
+
+            action: list
+
+            return ndarray (d, 1)
         '''
-        pass
+        
+
+        return None
