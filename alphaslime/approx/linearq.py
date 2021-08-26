@@ -2,7 +2,11 @@ import numpy as np
 from q import QApprox
 
 class LinearQApprox(QApprox):
-
+    '''
+        Linear q-function approximator
+        using linear combinations with a weight vector 
+        and feature vector x(s,a)
+    '''
     def __init__(self) -> None:
         super().__init__()
 
