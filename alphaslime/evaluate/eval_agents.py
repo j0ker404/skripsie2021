@@ -12,7 +12,8 @@
 '''
 import gym
 import slimevolleygym
-from ..agents.agent import Agent 
+# from ..agents.agent import Agent 
+from alphaslime.agents.agent import Agent
 import time
 
 class EvaluateGame:
@@ -61,6 +62,7 @@ class EvaluateGame:
             # print('action_left = {}'.format(action_left))
 
             # print('t = {}'.format(t))
+            print('obs1 = {}\n'.format(obs1))
 
             # go to next time step
             obs1, reward, done, info = self.env.step(action_right, action_left) # extra argument
