@@ -1,4 +1,6 @@
 import numpy as np
+import slimevolleygym
+
 
 class Agent:
 
@@ -10,6 +12,8 @@ class Agent:
             actions[2] -> jump
 
         '''
+        self.T_MAX =  3000
+
         # self.actions = np.array([0,0,0])
         self.actions = [0,0,0]
         self.action_table = [[0, 0, 0], # NOOP
