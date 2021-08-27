@@ -21,20 +21,20 @@ class LinearQApprox(QApprox):
 
             action: list
 
-            w: ndarray (d, 1)
+            w: ndarray (d+1, 1)
 
             return q_hat: shape(1,) 
         '''
         q_hat = None
         x = self.get_feature_vector(state=state, action=action)
-        q_hat = w.dot(x)
+        q_hat = w.T.dot(x)
         return q_hat
 
     def grad_q(self,state,action,w):
         '''
             Return the gradient of the q function
 
-            return grad q: shape(d, 1)
+            return grad q: shape(d+1, 1)
         '''
         return self.get_feature_vector(state=state, action=action)
 
@@ -46,8 +46,11 @@ class LinearQApprox(QApprox):
 
             action: list
 
-            return ndarray (d, 1)
+            return ndarray (d+1, 1)
         '''
         
-
-        return np.array(state).reshape((-1,1))
+        feature_vector = np.array(state).reshape((-1,1))
+        # add bias term
+        feature_vector = np.vstack((feature_vector, np.array([1])))
+        # print('feature vector = \n{}'.format(feature_vector))
+        return feature_vector
