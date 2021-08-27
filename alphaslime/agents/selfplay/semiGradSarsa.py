@@ -1,3 +1,4 @@
+from typing import AsyncIterator
 import numpy as np
 from alphaslime.agents.baseline import BaselineAgent
 
@@ -17,12 +18,17 @@ class SemiGradSarsa(Agent):
         self.alpha = alpha
         self.epsilon = epsilon
         self.gamma = gamma
-
+        
         # environment
         self.env = SLenv(opponent=opponent, env_id=env_id)
 
-        # weight vector
-        self.w = np.zeros((d, 1))
+        # weight vectors
+        '''
+            We have 6 weight vectors corresponds to each availabe move
+
+            each coloumn corresponds to a weight vector
+        '''
+        self.w = np.zeros((d, self.max_actions))
 
         # q function approximator
         self.q_hat = LinearQApprox()
@@ -53,14 +59,16 @@ class SemiGradSarsa(Agent):
                 obs_next, reward, done, info = self.env.step(action)
                 t += 1
                 
+                action_index = self.action_table.index(action)
                 # if at terminal state
                 if done:
-                    q_hat = self.q_hat.state_action_value(state=obs, action=action, w=self.w)
-                    grad_q_hat = self.q_hat.grad_q(state=obs, action=action, w=self.w)
+                    print('done')
+                    q_hat = self.q_hat.state_action_value(state=obs, action=action, w=self.w[:,action_index])
+                    grad_q_hat = self.q_hat.grad_q(state=obs, action=action, w=self.w[:,action_index])
                     beta = reward *  q_hat
 
                     # update weights
-                    self.w = self.w + self.alpha*beta*grad_q_hat
+                    self.w[:,action_index] = self.w[:,action_index] + self.alpha*beta*grad_q_hat.reshape((-1))
                     
                     # go to next episode
                     break
@@ -70,26 +78,36 @@ class SemiGradSarsa(Agent):
                 # ---------------------------------------------------
                 # update weight vector
 
-                q_hat = self.q_hat.state_action_value(state=obs, action=action, w=self.w)
-                grad_q_hat = self.q_hat.grad_q(state=obs, action=action, w=self.w)
-                q_hat_next = self.q_hat.state_action_value(state=obs_next, action=action_next, w=self.w)
+                action_next_index = self.action_table.index(action_next)
+
+                q_hat = self.q_hat.state_action_value(state=obs, action=action, w=self.w[:,action_index])
+                grad_q_hat = self.q_hat.grad_q(state=obs, action=action, w=self.w[:,action_index])
+                q_hat_next = self.q_hat.state_action_value(state=obs_next, action=action_next, w=self.w[:,action_next_index])
 
                 delta = (reward + self.gamma*q_hat_next - q_hat)
-                self.w = self.w + self.alpha*delta*grad_q_hat
+                print('-'*99)
+                print('self.w[:,action_index] = {}'.format(self.w[:,action_index]))
+                print('grad_q_hat = {}'.format(grad_q_hat))
+                self.w[:,action_index] = self.w[:,action_index] + self.alpha*delta*grad_q_hat.reshape((-1))
+                print('self.w[:,action_index] = {}'.format(self.w[:,action_index]))
+                print('-'*99)
                 # ---------------------------------------------------
 
                 obs = obs_next
                 action = action_next
 
+    
+
 
     def get_action(self, state):
         '''
-            Get next action give current state
+            Get next action given current state
+            for an  agent
 
             state: current observation
 
             TODO: implement epsilon-greedy  
         '''
-        action = None
+        action = [0,0,0]
 
         return action
