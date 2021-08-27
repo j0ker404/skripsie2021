@@ -13,6 +13,7 @@ class Agent:
 
         '''
         self.T_MAX =  3000
+        self.max_actions = 6
 
         # self.actions = np.array([0,0,0])
         self.actions = [0,0,0]
