@@ -1,5 +1,5 @@
 import numpy as np
-from q import QApprox
+from alphaslime.approx.q import QApprox
 
 class LinearQApprox(QApprox):
     '''
@@ -15,11 +15,15 @@ class LinearQApprox(QApprox):
             Return the approximate state-action value
             using linear combination
 
+            q_hat = w.T dot x(s,a)
+
             state: list
 
             action: list
 
             w: ndarray (d, 1)
+
+            return q_hat: shape(1,) 
         '''
         q_hat = None
         x = self.get_feature_vector(state=state, action=action)
@@ -27,6 +31,11 @@ class LinearQApprox(QApprox):
         return q_hat
 
     def grad_q(self,state,action,w):
+        '''
+            Return the gradient of the q function
+
+            return grad q: shape(d, 1)
+        '''
         return self.get_feature_vector(state=state, action=action)
 
     def get_feature_vector(self, state, action):
@@ -41,4 +50,4 @@ class LinearQApprox(QApprox):
         '''
         
 
-        return None
+        return np.array(state).reshape((-1,1))
