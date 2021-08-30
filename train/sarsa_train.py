@@ -12,10 +12,11 @@ import numpy as np
 
 
 if __name__ == '__main__':
-    alpha = 1/10 # step size
+    alpha = 0.5/8 # step size
     epsilon = 1
-    training_episodes = 10000
-    agent = SemiGradSarsa(alpha=alpha, epsilon=epsilon)
+    gamma = 0.999
+    training_episodes = 10000*2
+    agent = SemiGradSarsa(alpha=alpha, epsilon=epsilon, gamma=gamma)
     agent.train(training_episodes)
 
     weights = agent.w
@@ -27,7 +28,7 @@ if __name__ == '__main__':
     print('epsilon = {}'.format(agent.epsilon))
     print('-'*99)
 
-    with open('weights.csv', 'w', encoding='UTF8', newline='') as f:
+    with open('./train/weights_sarsa.csv', 'w', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
 
         # write the header
