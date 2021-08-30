@@ -21,12 +21,15 @@ class LinearQApprox(QApprox):
 
             action: list
 
-            w: ndarray (d+1, 1)
+            w: ndarray (d+1,)
 
             return q_hat: shape(1,) 
         '''
         q_hat = None
         x = self.get_feature_vector(state=state, action=action)
+        w = w.reshape((-1,1))
+        # print('w \n{}'.format(w))
+        # print('x \n{}'.format(x))
         q_hat = w.T.dot(x)
         return q_hat
 
