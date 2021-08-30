@@ -44,6 +44,10 @@ class EvaluateGame:
                 - save actions
                 - save rewards
                 - save time step
+
+            
+            return agent right score,
+            one can infer agent left score
         '''
         obs1 = self.env.reset()
         obs2 = obs1 # both sides always see the same initial observation.
@@ -62,7 +66,7 @@ class EvaluateGame:
             # print('action_left = {}'.format(action_left))
 
             # print('t = {}'.format(t))
-            print('obs1 = {}\n'.format(obs1))
+            # print('obs1 = {}\n'.format(obs1))
 
             # go to next time step
             obs1, reward, done, info = self.env.step(action_right, action_left) # extra argument
@@ -78,9 +82,12 @@ class EvaluateGame:
                 # sleep
                 time.sleep(self.delay)
 
-        print("agent right's score:", total_reward)
-        print("agent left's score:", -total_reward)
+        # print("agent right's score:", total_reward)
+        # print("agent left's score:", -total_reward)
 
+        # return score
+
+        return total_reward
 
 
 
