@@ -108,6 +108,9 @@ class SemiGradSarsa(Agent):
         t = 0
         # episode reward tracker
         episode_reward_value = 0
+        # max values for normalisation
+        max_val_array = np.zeros((2))
+        
         for episode in range(episodes):
             # reset environment
             obs = self.env.reset()
@@ -161,9 +164,18 @@ class SemiGradSarsa(Agent):
                         self.alpha*beta*grad_q_hat.reshape((-1))
 
                     # normalize weights
-                    max_val =  self.w[:, action_index].max(axis=0)
-                    if np.abs(max_val) > 0:
-                        self.w[:, action_index] = self.w[:, action_index] / max_val
+                    # max_val =  self.w[:, action_index].max(axis=0)
+                    # if np.abs(max_val) > 0:
+                    #     self.w[:, action_index] = self.w[:, action_index] / max_val
+
+                    max_val = np.abs(self.w[:, action_index].max(axis=0))
+                    min_val = np.abs(self.w[:, action_index].min(axis=0))
+                    max_val_array[0] = max_val
+                    max_val_array[1] = min_val
+
+                    abs_max = np.max(max_val_array)
+                    if abs_max > 0:
+                        self.w[:, action_index] = self.w[:, action_index] / abs_max  
 
                     # go to next episode
                     break
@@ -193,9 +205,14 @@ class SemiGradSarsa(Agent):
                     self.alpha*delta*grad_q_hat.reshape((-1))
 
                 # normalize weight
-                max_val = self.w[:, action_index].max(axis=0)
-                if np.abs(max_val) > 0:
-                    self.w[:, action_index] = self.w[:, action_index] / max_val  
+                max_val = np.abs(self.w[:, action_index].max(axis=0))
+                min_val = np.abs(self.w[:, action_index].min(axis=0))
+                max_val_array[0] = max_val
+                max_val_array[1] = min_val
+
+                abs_max = np.max(max_val_array)
+                if abs_max > 0:
+                    self.w[:, action_index] = self.w[:, action_index] / abs_max 
 
                 # ---------------------------------------------------
 
