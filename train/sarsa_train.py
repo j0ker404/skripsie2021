@@ -6,16 +6,16 @@ PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 
-from alphaslime.agents.selfplay.semiGradSarsa import SemiGradSarsa
+from alphaslime.agents.other.semiGradSarsa import SemiGradSarsa
 # import alphaslime.agents.selfplay
 import numpy as np
 
 
 if __name__ == '__main__':
-    alpha = 0.5/8 # step size
+    alpha = 3e-4 # step size
     epsilon = 1
-    gamma = 0.999
-    training_episodes = 10000*2
+    gamma = 0.99
+    training_episodes = 10
     agent = SemiGradSarsa(alpha=alpha, epsilon=epsilon, gamma=gamma)
     agent.train(training_episodes)
 
