@@ -62,6 +62,9 @@ class SemiGradSarsa(Agent):
         # values for epislonn decay with reward threshold
         self.reward_threshold = 0
         self.reward_threshold_increment = 1
+
+        # exponetial epsilon decay
+        self.EPSILON_DECAY_BASE = 0.997
     
     def reward_threshold_updater(self):
         '''
@@ -129,9 +132,11 @@ class SemiGradSarsa(Agent):
 
             # decay with reward threshold
             if self.EPSILON_DECAY_STATE:
-                if episode_reward_value >= self.reward_threshold:
-                    self.epsilon = self.decay_epsilon()
-                    self.reward_threshold = self.reward_threshold_updater()
+                # if episode_reward_value >= self.reward_threshold:
+                #     self.epsilon = self.decay_epsilon()
+                #     self.reward_threshold = self.reward_threshold_updater()
+                
+                self.epsilon = np.power(self.EPSILON_DECAY_BASE, episode)
 
             # ---------------------------------------------------
 
