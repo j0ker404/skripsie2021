@@ -10,3 +10,4 @@ alphaslime/agents/selfplay/__pycache__/semiGradSarsa.cpython-38.pyc
 alphaslime/envgame/__pycache__/slenv.cpython-38.pyc
 alphaslime/envgame/__pycache__/__init__.cpython-38.pyc
 alphaslime/approx/__pycache__/q.cpython-38.pyc
+alphaslime/agents/other/__pycache__/semiGradSarsa.cpython-38.pyc
