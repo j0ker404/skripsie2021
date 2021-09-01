@@ -25,6 +25,7 @@ class GreedyAgent(Agent):
             d: dimension of observation state space
 
             weights: weight vector for q-fuction approximator
+                    ndarray: (d+1, n_actions)
         '''
         super().__init__()
         
@@ -34,7 +35,13 @@ class GreedyAgent(Agent):
         # q approximator
         self.q_hat = q_hat
 
+        # set observation space dimensions
+        self.d = d
+
         if weights is None:
+            # configure weight to have extra dimension i.e. d+1
+            # the extra dimension is used as a bias term/offset
+
             self.w = np.zeros((self.d+1, self.max_actions))
         else:
             # trained data
