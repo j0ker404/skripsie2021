@@ -1,16 +1,15 @@
-import numpy as np
-import slimevolleygym
-
 
 class Agent:
+    '''
+        Base Agent class implementation
 
+    '''
     def __init__(self) -> None:
         # action space
         '''
             actions[0] -> forward
             actions[1] -> backward
             actions[2] -> jump
-
         '''
         self.T_MAX =  3000
         self.MAX_SCORE = 5
