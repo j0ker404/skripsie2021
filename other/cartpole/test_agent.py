@@ -35,20 +35,22 @@ if __name__ == '__main__':
 
     N = 10
     # run N episodes
-    agent_right_score = np.zeros((N,))
+    agent_score = np.zeros((N,))
     print('Start running episodes..')
     for n in range(N):
 
         score = eval_game.evaluate_episode()
-        agent_right_score[n] = score
+        agent_score[n] = score
 
 
     print('*'*10)
-    print('Agent right total score = {}'.format(agent_right_score.sum()))
+    print('Agent right total score = {}'.format(agent_score.sum()))
     print('*'*10)
 
     print('*'*10)
     print('Agent(player) score: \n')
-    for episode, score in enumerate(agent_right_score):
+    for episode, score in enumerate(agent_score):
         print('Episode {}\t: {}'.format(episode, score))
     print('*'*10)
+
+    print('Average score per episode = {}'.format(np.mean(agent_score)))
