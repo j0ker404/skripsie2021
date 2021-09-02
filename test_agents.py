@@ -1,17 +1,20 @@
 from alphaslime.evaluate.eval_agents import EvaluateGame
 from alphaslime.agents.baseline import BaselineAgent
 from alphaslime.agents.other.semiGradSarsa import SemiGradSarsa
+from alphaslime.agents.selfplay.sarsa import SarsaSP  
 
 from pandas import read_csv
 import numpy as np
 
 if __name__ == '__main__':
 
-    df = read_csv('./train/weights_sarsa.csv', header=None)
+    # df = read_csv('./train/weights_sarsa.csv', header=None)
+    df = read_csv('./train/selfplay/sarsa/weight.csv', header=None)
     weights = df.values
     print(weights)
 
-    agent_right = SemiGradSarsa(epsilon=0.0, weights=weights)
+    # agent_right = SemiGradSarsa(epsilon=0.0, weights=weights)
+    agent_right = SarsaSP(epsilon=0.0, weights=weights)
     agent_left = BaselineAgent()
     base_dir = './'
     RENDER = True
