@@ -1,4 +1,4 @@
-from alphaslime.evaluate.eval_agents import EvaluateGame
+from alphaslime.evaluate.eval_agents import EvaluateGameMA
 from alphaslime.agents.baseline import BaselineAgent
 from alphaslime.agents.other.semiGradSarsa import SemiGradSarsa
 from alphaslime.agents.selfplay.sarsa import SarsaSP  
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     RENDER = True
     env_id = "SlimeVolley-v0"
     # env_id = "SlimeVolleyPixel-v0"
-    eval_game = EvaluateGame(agent_right=agent_right, agent_left=agent_left, base_dir_path=base_dir, render=RENDER, env_id=env_id)
+    eval_game = EvaluateGameMA(agent_right=agent_right, agent_left=agent_left, base_dir_path=base_dir, render=RENDER, env_id=env_id)
 
     N = 50
     # run N episodes
