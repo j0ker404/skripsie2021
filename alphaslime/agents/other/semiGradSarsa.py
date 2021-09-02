@@ -1,4 +1,6 @@
 import numpy as np
+import gym
+
 from alphaslime.agents.baseline import BaselineAgent
 
 # from alphaslime.agents.agent import Agent
@@ -15,7 +17,25 @@ class SemiGradSarsa(GreedyAgent):
         state-action value function (q)
     '''
 
-    def __init__(self, alpha=1/10, epsilon=0.1, gamma=0.9, d=12, env_id="SlimeVolley-v0", opponent=BaselineAgent(), weights=None) -> None:
+    def __init__(self, alpha=1/10, epsilon=0.1, gamma=0.9, d=12, env_id=None, opponent=None, weights=None, is_MA=True) -> None:
+        '''
+            alpha: alpha value (float)
+
+            epsilon: epsilon value for epsilon-greedy (float)
+
+            gamma: (float)
+
+            d: dimension of expected observation state
+
+            env_id: gym environment id
+
+            opponent: opponent agent for multi-agent environments
+
+            weights: pretrained weights for agent
+
+            is_MA: (boolean), true if multiagent environemt 
+        
+        '''
         # q function approximator
         self.q_hat = LinearQApprox()
         self.d = d
@@ -25,8 +45,17 @@ class SemiGradSarsa(GreedyAgent):
         # self.epsilon = epsilon
         self.gamma = gamma
 
+
         # environment
-        self.env = SLenv(opponent=opponent, env_id=env_id)
+        if env_id is None:
+            env_id="SlimeVolley-v0"
+        if opponent is None:
+            opponent=BaselineAgent()
+        if is_MA:
+            self.env = SLenv(opponent=opponent, env_id=env_id)
+        else:
+            self.env = gym.make(env_id)
+        
 
 
 
@@ -127,7 +156,7 @@ class SemiGradSarsa(GreedyAgent):
             episode_reward_value = 0
             # ---------------------------------------------------
 
-            if episode%1000 == 0:
+            if episode%self.episode_printer == 0:
                 print('Completed Episodes = {}'.format(episode))
             while t < self.T_MAX:
                 # take action, go to next time step
