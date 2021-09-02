@@ -17,14 +17,15 @@ if __name__ == '__main__':
     alpha = 3e-4 # step size
     epsilon = 1
     gamma = 0.99
-    training_episodes = 100
+    training_episodes = 1000
     champion_trails = 10
 
     q_hat = LinearQApprox()
     agent = SarsaSP(alpha=alpha, epsilon=epsilon, gamma=gamma, q_hat=q_hat)
     agent.train(episodes=training_episodes, num_champions_train=champion_trails)
 
-    weights = agent.w
+    # get weights of latest champion
+    weights = agent.champion.w
     print('-'*99)
     print('final training data')
     print('self.w = {}'.format(
