@@ -125,7 +125,6 @@ class EvaluateGameSA:
             one can infer agent left score
         '''
         obs1 = self.env.reset()
-        obs2 = obs1 # both sides always see the same initial observation.
 
         done = False
         total_reward = 0
