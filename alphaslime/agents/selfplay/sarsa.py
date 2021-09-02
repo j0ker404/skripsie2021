@@ -27,6 +27,7 @@ class SarsaSP(GreedyAgent):
         # current opponent to become new champion
         # arbitary values chosen
         self.THRESHOLD = 0.01
+        self.champion = None
 
         # environment variables
         self.env_id = env_id
@@ -59,11 +60,11 @@ class SarsaSP(GreedyAgent):
             pass
 
         # load random champion for intial purpuse
-        champion = GreedyAgent(self.epsilon, self.q_hat, self.d, weights=self.w)
-        champions.append(champion)
+        self.champion = GreedyAgent(self.epsilon, self.q_hat, self.d, weights=self.w)
+        champions.append(self.champion)
 
         # configure initial gym environment
-        self.env = SLenv(opponent=champion, env_id=self.env_id)
+        self.env = SLenv(opponent=self.champion, env_id=self.env_id)
         # time step tracker per episode
         t = 0
         # episode reward tracker
@@ -74,9 +75,6 @@ class SarsaSP(GreedyAgent):
 
         for i in range(num_champions_train):
 
-            # reset episode avgerage score
-            avg_score_episode = avg_score_episode/episodes
-
             # reset epsilon value
             self.epsilon = self.INIT_EPSILON
 
@@ -85,16 +83,12 @@ class SarsaSP(GreedyAgent):
             # train new agent
             for episode in range(episodes):
 
-                # update champions list
-                if avg_score_episode > self.THRESHOLD:
-                    champion = GreedyAgent(self.epsilon, self.q_hat, self.d, weights=self.w)
-                    champions.append(champion)
-                    avg_score_episode = 0
+
 
                 # use latest champion for training new agent
-                champion = champions[-1]
+                self.champion = champions[-1]
                 # change opponent in environment
-                self.env.opponent = champion
+                self.env.opponent = self.champion
                 
                 
                 
@@ -195,5 +189,13 @@ class SarsaSP(GreedyAgent):
                     action = action_next
                     # ---------------------------------------------------
 
+            # update avgerage score
+            avg_score_episode = avg_score_episode/episodes
+
+            # update champions list
+            if avg_score_episode > self.THRESHOLD:
+                self.champion = GreedyAgent(self.epsilon, self.q_hat, self.d, weights=self.w)
+                champions.append(self.champion)
+                avg_score_episode = 0
 
     
