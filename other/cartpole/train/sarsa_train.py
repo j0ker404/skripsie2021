@@ -9,10 +9,15 @@ sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 from alphaslime.agents.other.semiGradSarsa import SemiGradSarsa
 
 import numpy as np
-
+import random
 
 if __name__ == '__main__':
-    alpha = 0.6 # step size
+
+    # np.random.seed(0)
+    seed = 42
+    np.random.seed(seed)    
+
+    alpha = 0.5 # step size
     epsilon = 1
     gamma = 0.995
     training_episodes = 1000
@@ -20,10 +25,11 @@ if __name__ == '__main__':
     action_table = [0, 1]
 
     # TODO: simplyfy config
-    agent = SemiGradSarsa(alpha=alpha, epsilon=epsilon, gamma=gamma, d=observation_dimension, is_MA=False, env_id='CartPole-v1')
+    env_id = 'CartPole-v0'
+    agent = SemiGradSarsa(alpha=alpha, epsilon=epsilon, gamma=gamma, d=observation_dimension, is_MA=False, env_id=env_id, SEED=seed)
     agent.action_table = action_table
     agent.max_actions = len(agent.action_table)
-    agent.MAX_SCORE = 195
+    agent.MAX_SCORE = 200
     # change action space
 
     agent.train(training_episodes)
