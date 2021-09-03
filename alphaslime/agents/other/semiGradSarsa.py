@@ -17,7 +17,7 @@ class SemiGradSarsa(GreedyAgent):
         state-action value function (q)
     '''
 
-    def __init__(self, alpha=1/10, epsilon=0.1, gamma=0.9, d=12, env_id=None, opponent=None, weights=None, is_MA=True) -> None:
+    def __init__(self, alpha=1/10, epsilon=0.1, gamma=0.9, d=12, env_id=None, opponent=None, weights=None, is_MA=True, SEED=None) -> None:
         '''
             alpha: alpha value (float)
 
@@ -40,7 +40,7 @@ class SemiGradSarsa(GreedyAgent):
         self.q_hat = LinearQApprox()
         self.d = d
 
-        super().__init__(epsilon=epsilon, q_hat=self.q_hat, d=self.d, weights=weights )
+        super().__init__(epsilon=epsilon, q_hat=self.q_hat, d=self.d, weights=weights)
         self.alpha = alpha
         # self.epsilon = epsilon
         self.gamma = gamma
@@ -56,7 +56,9 @@ class SemiGradSarsa(GreedyAgent):
         else:
             self.env = gym.make(env_id)
         
-
+        # seed environment
+        if SEED is not None:
+            self.env.seed(SEED)
 
 
         # minimum epsilon value

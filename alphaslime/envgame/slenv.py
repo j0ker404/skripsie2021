@@ -11,7 +11,7 @@ import numpy as np
 import gym
 from ..agents.agent import Agent 
 
-class SLenv:
+class SLenv():
 
     def __init__(self,opponent:Agent, env_id="SlimeVolley-v0") -> None:
         
@@ -41,6 +41,9 @@ class SLenv:
         
 
         return self.obs_player, reward, done, info
+
+    def seed(self, seed):
+        return self.env.seed(seed)
 
 
 
