@@ -101,6 +101,90 @@ class SemiGradSarsa(GreedyAgent):
 
         return bar
 
+    def forward(self, obs, action):
+        '''
+        one time step train
+
+            obs: current state observation
+
+            action: action to execute based on state
+
+
+            return done, reward, obs_next, obs, action_next, action, q_hat, q_hat_next
+        '''
+        max_val_array = np.zeros((2,))
+        action_next = None
+        q_hat_next = None
+
+        #  take action, go to next time step
+        obs_next, reward, done, info = self.env.step(action)
+
+        action_index = self.action_table.index(action)
+        # if at terminal state
+        if done:
+            q_hat = self.q_hat.state_action_value(
+                state=obs, action=action, w=self.w[:, action_index])
+            grad_q_hat = self.q_hat.grad_q(
+                state=obs, action=action, w=self.w[:, action_index])
+            beta = reward - q_hat
+
+            # update weights
+            self.w[:, action_index] = self.w[:, action_index] + \
+                self.alpha*beta*grad_q_hat.reshape((-1))
+
+            # normalize weights
+            max_val = np.abs(self.w[:, action_index].max(axis=0))
+            min_val = np.abs(self.w[:, action_index].min(axis=0))
+            max_val_array[0] = max_val
+            max_val_array[1] = min_val
+
+            abs_max = np.max(max_val_array)
+            if abs_max > 0:
+                self.w[:, action_index] = self.w[:, action_index] / abs_max  
+            # go to next episode
+        else:
+            action_next = self.get_action(obs_next)
+
+            # ---------------------------------------------------
+            # update weight vector
+
+            action_next_index = self.action_table.index(action_next)
+
+            q_hat = self.q_hat.state_action_value(
+                state=obs, action=action, w=self.w[:, action_index])
+
+            grad_q_hat = self.q_hat.grad_q(
+                state=obs, action=action, w=self.w[:, action_index])
+
+            q_hat_next = self.q_hat.state_action_value(
+                state=obs_next, action=action_next, w=self.w[:, action_next_index])
+
+
+            delta = (reward + self.gamma*q_hat_next - q_hat)
+        
+            self.w[:, action_index] = self.w[:, action_index] + \
+                self.alpha*delta*grad_q_hat.reshape((-1))
+
+            # normalize weight
+            max_val = np.abs(self.w[:, action_index].max(axis=0))
+            min_val = np.abs(self.w[:, action_index].min(axis=0))
+            max_val_array[0] = max_val
+            max_val_array[1] = min_val
+
+            abs_max = np.max(max_val_array)
+            if abs_max > 0:
+                self.w[:, action_index] = self.w[:, action_index] / abs_max 
+
+            # ---------------------------------------------------
+
+            # ---------------------------------------------------
+            # update state-obeservation and action-state
+            obs = obs_next
+            action = action_next
+            # ---------------------------------------------------
+
+
+
     def train(self, episodes, reset_data=True):
         '''
             Train Agent
