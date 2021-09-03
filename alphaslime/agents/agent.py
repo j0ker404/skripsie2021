@@ -30,6 +30,38 @@ class Agent:
             self.action_table = action_table
         self.max_actions = len(self.action_table)
 
+    def forward(self, obs, action):
+        '''
+            one time step train
+
+            obs: state obeservation
+
+            action: action to execute based on state
+
+            return:
+            - done: boolean, True if episode complete
+
+            - reward: int, reward gained from action
+
+            - obs_next: next state observation after action executed
+
+            - action_next: next action to execute bases on obs_next 
+
+        '''
+        done = None
+        reward = None
+        obs_next = None
+        action_next = None
+        other_data = None
+
+        return done, reward, obs_next, action_next, other_data
+
+    def episode_train(self):
+        '''
+            episode train
+        '''
+        pass
+
     def train(self):
         '''
             Train Agent
