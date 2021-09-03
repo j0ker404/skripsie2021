@@ -4,7 +4,7 @@ class Agent:
         Base Agent class implementation
 
     '''
-    def __init__(self, action_table=None, max_score=None, t_max=3000, episode_printer=100) -> None:
+    def __init__(self, action_table=None, max_score=None, t_max=3000, episode_printer=100,) -> None:
         # action space
         '''
             actions[0] -> forward

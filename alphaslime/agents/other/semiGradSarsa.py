@@ -58,7 +58,7 @@ class SemiGradSarsa(GreedyAgent):
         
         # seed environment
         if SEED is not None:
-            self.env.seed(SEED)
+            self.env.seed(seed=SEED)
 
 
         # minimum epsilon value
