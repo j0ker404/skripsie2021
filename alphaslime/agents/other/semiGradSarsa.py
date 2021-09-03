@@ -101,20 +101,20 @@ class SemiGradSarsa(GreedyAgent):
 
         return bar
 
-    def forward(self, obs, action):
+    def forward(self, obs):
         '''
         one time step train
 
             obs: current state observation
-
-            action: action to execute based on state
-
 
             return done, reward, obs_next, obs, action_next, action, q_hat, q_hat_next
         '''
         max_val_array = np.zeros((2,))
         action_next = None
         q_hat_next = None
+
+        # get action to execute based on state
+        action = self.get_action(obs)
 
         #  take action, go to next time step
         obs_next, reward, done, info = self.env.step(action)
@@ -182,6 +182,18 @@ class SemiGradSarsa(GreedyAgent):
             obs = obs_next
             action = action_next
             # ---------------------------------------------------
+
+        done, reward, obs_next, obs, action_next, action, q_hat, q_hat_next
+
+
+    def episode_train(self):
+        '''
+            episode train
+        '''
+        # time step tracker per episode
+        t = 0
+        # episode reward tracker
+        episode_reward_value = 0
 
 
 
