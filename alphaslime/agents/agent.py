@@ -42,7 +42,7 @@ class Agent:
                                 [0, 1, 0]] # RIGHT (backward)
         else:
             self.action_table = action_table
-            
+
         self.max_actions = len(self.action_table)
 
 
@@ -75,8 +75,46 @@ class Agent:
     def episode_train(self):
         '''
             episode train
+
+            return t, episode_reward_value
+            - t: int, total number of time steps for episode
+            - episode_reward_value: float, total reward value for episode
         '''
-        pass
+        # time step tracker per episode
+        t = 0
+        # episode reward tracker
+        episode_reward_value = 0
+        # done, is episode over
+        done = False
+
+        # reset environment for new episode
+        obs = self.env.reset()
+        # get action to execute based on state
+        action = self.get_action(obs)
+
+        while t < self.T_MAX and not done:
+            '''
+                other_data: dict | None
+                    stores other data obtained from making an action
+                    example a state-value function
+            '''
+
+            # go to next time step
+            done, reward, obs_next, action_next, other_data = self.forward(obs, action)
+
+            # increment episode reward counter
+            episode_reward_value += reward
+
+            # update observation, action for next time step
+            obs = obs_next
+            action = action_next
+
+            # increment time step
+            t += 1
+        
+        # return episode data
+
+        return t, episode_reward_value
 
     def train(self):
         '''
