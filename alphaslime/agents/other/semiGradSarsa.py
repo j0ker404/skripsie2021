@@ -22,7 +22,7 @@ class SemiGradSarsa(GreedyAgent):
         '''
             config: dict, with configuration values
 
-            alpha=1/10,  gamma=0.9, opponent=None, is_MA=True, SEED=None
+            alpha=1/10,  gamma=0.9 
             config: key-values
 
             - alpha: alpha value (float)
@@ -33,29 +33,14 @@ class SemiGradSarsa(GreedyAgent):
 
             - d: dimension of expected observation state
 
-            - env_id: gym environment id
-
             - opponent: opponent agent for multi-agent environments
 
             - weights: pretrained weights for agent
 
-            - is_MA: (boolean), true if multiagent environemt 
-
-            - SEED: int, seed value for random numbers
+            - q_hat: QApprox, q function approximator
         
         '''
-        # q function approximator
-        q_hat = LinearQApprox()
 
-        # config
-        config['q_hat'] = q_hat
-        # self.d = d
-
-        # add q_hat to 
-        # kwargs['q_hat'] = q_hat 
-
-        # super().__init__(epsilon=epsilon, q_hat=self.q_hat, d=self.d, weights=weights)
-        # super().__init__(q_hat=q_hat,*args, **kwargs)
         super().__init__(config)
         self.alpha = config['alpha']
         # self.epsilon = epsilon
@@ -72,11 +57,6 @@ class SemiGradSarsa(GreedyAgent):
         # else:
         #     self.env = gym.make(env_id)
         
-        # seed environment
-        SEED = config['SEED']
-        if SEED is not None:
-            self.env.seed(seed=SEED)
-
 
         # minimum epsilon value
         self.MINIMUM_EPSILON = 0.0
@@ -133,6 +113,9 @@ class SemiGradSarsa(GreedyAgent):
                 q_hat_next
             }
         '''
+
+        done, reward, obs_next, action_next, other_data =  super().forward(obs, action)
+        
         max_val_array = np.zeros((2,))
         action_next = None
         q_hat_next = None

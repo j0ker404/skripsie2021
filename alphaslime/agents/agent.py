@@ -87,7 +87,7 @@ class Agent:
         reward = None
         obs_next = None
         action_next = None
-        other_data = None
+        other_data = {}
 
         return done, reward, obs_next, action_next, other_data
 

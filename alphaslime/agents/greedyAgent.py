@@ -6,7 +6,6 @@
 
 import numpy as np
 from alphaslime.agents.agent import Agent
-from alphaslime.approx.q import QApprox
 
 class GreedyAgent(Agent):
     '''
