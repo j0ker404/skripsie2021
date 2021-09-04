@@ -17,46 +17,63 @@ class SemiGradSarsa(GreedyAgent):
         state-action value function (q)
     '''
 
-    def __init__(self, alpha=1/10, epsilon=0.1, gamma=0.9, d=12, env_id=None, opponent=None, weights=None, is_MA=True, SEED=None) -> None:
+    # def __init__(self, alpha=1/10, epsilon=0.1, gamma=0.9, d=12, env_id=None, opponent=None, weights=None, is_MA=True, SEED=None, *args, **kwargs) -> None:
+    def __init__(self, config:dict) -> None:
         '''
-            alpha: alpha value (float)
+            config: dict, with configuration values
 
-            epsilon: epsilon value for epsilon-greedy (float)
+            alpha=1/10,  gamma=0.9, opponent=None, is_MA=True, SEED=None
+            config: key-values
 
-            gamma: (float)
+            - alpha: alpha value (float)
 
-            d: dimension of expected observation state
+            - epsilon: epsilon value for epsilon-greedy (float)
 
-            env_id: gym environment id
+            - gamma: (float)
 
-            opponent: opponent agent for multi-agent environments
+            - d: dimension of expected observation state
 
-            weights: pretrained weights for agent
+            - env_id: gym environment id
 
-            is_MA: (boolean), true if multiagent environemt 
+            - opponent: opponent agent for multi-agent environments
+
+            - weights: pretrained weights for agent
+
+            - is_MA: (boolean), true if multiagent environemt 
+
+            - SEED: int, seed value for random numbers
         
         '''
         # q function approximator
-        self.q_hat = LinearQApprox()
-        self.d = d
+        q_hat = LinearQApprox()
 
-        super().__init__(epsilon=epsilon, q_hat=self.q_hat, d=self.d, weights=weights)
-        self.alpha = alpha
+        # config
+        config['q_hat'] = q_hat
+        # self.d = d
+
+        # add q_hat to 
+        # kwargs['q_hat'] = q_hat 
+
+        # super().__init__(epsilon=epsilon, q_hat=self.q_hat, d=self.d, weights=weights)
+        # super().__init__(q_hat=q_hat,*args, **kwargs)
+        super().__init__(config)
+        self.alpha = config['alpha']
         # self.epsilon = epsilon
-        self.gamma = gamma
+        self.gamma = config['gamma']
 
 
         # environment
-        if env_id is None:
-            env_id="SlimeVolley-v0"
-        if opponent is None:
-            opponent=BaselineAgent()
-        if is_MA:
-            self.env = SLenv(opponent=opponent, env_id=env_id)
-        else:
-            self.env = gym.make(env_id)
+        # if env_id is None:
+        #     env_id="SlimeVolley-v0"
+        # if opponent is None:
+        #     opponent=BaselineAgent()
+        # if is_MA:
+        #     self.env = SLenv(opponent=opponent, env_id=env_id)
+        # else:
+        #     self.env = gym.make(env_id)
         
         # seed environment
+        SEED = config['SEED']
         if SEED is not None:
             self.env.seed(seed=SEED)
 
@@ -101,20 +118,24 @@ class SemiGradSarsa(GreedyAgent):
 
         return bar
 
-    def forward(self, obs):
+    def forward(self, obs, action):
         '''
         one time step train
 
             obs: current state observation
 
-            return done, reward, obs_next, obs, action_next, action, q_hat, q_hat_next
+            action: action to execute based on state
+
+            return done, reward, obs_next, action_next, other_data
+
+            other_data = {
+                q_hat,
+                q_hat_next
+            }
         '''
         max_val_array = np.zeros((2,))
         action_next = None
         q_hat_next = None
-
-        # get action to execute based on state
-        action = self.get_action(obs)
 
         #  take action, go to next time step
         obs_next, reward, done, info = self.env.step(action)
@@ -182,19 +203,44 @@ class SemiGradSarsa(GreedyAgent):
             obs = obs_next
             action = action_next
             # ---------------------------------------------------
+        
+        other_data  = {
+            'q_hat': q_hat,
+            'q_hat_next': q_hat_next
+        }
+        
 
-        done, reward, obs_next, obs, action_next, action, q_hat, q_hat_next
+        done, reward, obs_next, action_next, other_data
 
 
-    def episode_train(self):
+    def train_agent(self, episodes, reset_data=True):
         '''
-            episode train
-        '''
-        # time step tracker per episode
-        t = 0
-        # episode reward tracker
-        episode_reward_value = 0
+            Train Agent
 
+
+            episodes: total number of episodes to play
+
+
+            #TODO: save training data
+        '''
+        if reset_data:
+            # reset weights
+            self.w = np.zeros((self.d+1, self.max_actions))
+            # self.epsilon = 1
+            self.reward_threshold = 0
+
+        # iterate episodes
+        for episode in range(episodes):
+            # training output display
+            if episode%self.episode_printer == 0:
+                print('Completed Episodes = {}'.format(episode))
+
+            # update epsilon decay value
+            if self.EPSILON_DECAY_STATE:
+                self.epsilon = np.power(self.EPSILON_DECAY_BASE, episode)
+            
+            # train episode
+            t, episode_reward_value = self.episode_train()
 
 
     def train(self, episodes, reset_data=True):

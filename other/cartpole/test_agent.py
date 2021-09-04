@@ -14,7 +14,7 @@ from pandas import read_csv
 import numpy as np
 
 import random
-
+import gym
 
 if __name__ == '__main__':
 
@@ -22,18 +22,40 @@ if __name__ == '__main__':
     df = read_csv('./other/cartpole/train/sarsa/weight.csv', header=None)
     weights = df.values
     print(weights)
-    env_id = "CartPole-v0"
+    env_id = "CartPole-v1"
 
     seed = 42
     np.random.seed(seed)    
 
-    # agent_right = SemiGradSarsa(epsilon=0.0, weights=weights)
-    # agent = SemiGradSarsa(epsilon=0.0, weights=weights)
+    alpha = 0.95 # step size
+    epsilon = 1
+    gamma = 0.995
+    training_episodes = 300
+    observation_dimension=4
+    action_table = [0, 1]
+    
+    env_id = 'CartPole-v1'
+    env = gym.make(env_id)
 
-    # np.random.seed(0)
-    # random.seed(0)
 
-    agent = SemiGradSarsa(epsilon=0.0, weights=weights, is_MA=False, env_id=env_id)
+    
+    config = {
+        'alpha': 0.95,
+        'gamma': gamma,
+        'epsilon': epsilon,
+        'action_table': action_table,
+        'd': observation_dimension,
+        'is_MA': False,
+        'env_id': env_id,
+        'SEED': seed,
+        't_max': 3000,
+        'max_score': 200,
+        'episode_printer': 100,
+        'env': env,
+        'weights':None
+    }
+
+    agent = SemiGradSarsa(config)
     agent.action_table =  [0, 1]
     agent.max_actions = len(agent.action_table)
     agent.MAX_SCORE = 200

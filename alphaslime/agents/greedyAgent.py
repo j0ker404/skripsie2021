@@ -16,28 +16,35 @@ class GreedyAgent(Agent):
 
     '''
 
-    def __init__(self, epsilon, q_hat:QApprox, d, weights=None, *args, **kwargs) -> None:
+    def __init__(self, config:dict) -> None:
         '''
-            epsilon: epsilon value
+            epsilon, q_hat:QApprox, d, weights=None
 
-            q_hat: q-function approximator
+            config: key-value
 
-            d: dimension of observation state space
+            - epsilon: epsilon value
 
-            weights: weight vector for q-fuction approximator
+            - q_hat: q-function approximator
+
+            - d: dimension of observation state space
+
+            - weights: weight vector for q-fuction approximator
                     ndarray: (d+1, n_actions)
+
+            TODO: raise errors for non-init values 
         '''
-        super().__init__(*args, **kwargs)
+        super().__init__(config)
         
         # epsilon value used for exploration/exploitation
-        self.epsilon = epsilon
+        self.epsilon = config['epsilon']
 
         # q approximator
-        self.q_hat = q_hat
+        self.q_hat = config['q_hat']
 
         # set observation space dimensions
-        self.d = d
-
+        self.d = config['d']
+        
+        weights = config['weights']
         if weights is None:
             # configure weight to have extra dimension i.e. d+1
             # the extra dimension is used as a bias term/offset
