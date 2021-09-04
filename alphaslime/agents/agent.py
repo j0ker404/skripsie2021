@@ -4,7 +4,22 @@ class Agent:
         Base Agent class implementation
 
     '''
-    def __init__(self, action_table=None, max_score=None, t_max=3000, episode_printer=100,) -> None:
+    def __init__(self, action_table=None, max_score=None, t_max=3000, episode_printer=100, env=None) -> None:
+        '''
+            - action_table: list of actions
+                - action is a boolean array
+                - example, action_1 = [0,1,0]
+
+            - max_score: float, max score that can be achieved for environment episode
+
+            - t_max: int, max number of time steps per episode
+
+            - episode_printer: int, used to determine the rate at which episode data is
+                                logged(printed to screen)
+            
+            - env: gym environment
+        
+        '''
         # action space
         '''
             actions[0] -> forward
@@ -14,10 +29,9 @@ class Agent:
         self.T_MAX =  t_max
         self.MAX_SCORE = max_score
         self.episode_printer = episode_printer
-        # self.max_actions = 6
+        # configure environment
+        self.env = env
 
-        # self.actions = np.array([0,0,0])
-        self.actions = [0,0,0]
         if action_table is None:
             # configure to use the normal thing
             self.action_table = [[0, 0, 0], # NOOP
@@ -28,7 +42,9 @@ class Agent:
                                 [0, 1, 0]] # RIGHT (backward)
         else:
             self.action_table = action_table
+            
         self.max_actions = len(self.action_table)
+
 
     def forward(self, obs, action):
         '''
