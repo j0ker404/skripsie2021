@@ -74,6 +74,8 @@ class Agent:
 
     def episode_train(self):
         '''
+            TODO: - log data to disk
+            
             episode train
 
             return t, episode_reward_value
