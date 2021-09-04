@@ -16,7 +16,7 @@ class GreedyAgent(Agent):
 
     '''
 
-    def __init__(self, epsilon, q_hat:QApprox, d, weights=None) -> None:
+    def __init__(self, epsilon, q_hat:QApprox, d, weights=None, *args, **kwargs) -> None:
         '''
             epsilon: epsilon value
 
@@ -27,7 +27,7 @@ class GreedyAgent(Agent):
             weights: weight vector for q-fuction approximator
                     ndarray: (d+1, n_actions)
         '''
-        super().__init__()
+        super().__init__(*args, **kwargs)
         
         # epsilon value used for exploration/exploitation
         self.epsilon = epsilon
