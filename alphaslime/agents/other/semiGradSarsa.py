@@ -209,7 +209,7 @@ class SemiGradSarsa(GreedyAgent):
         # iterate episodes
         for episode in range(episodes):
             # training output display
-            if episode%self.episode_printer == 0:
+            if episode%self.episode_printer == 0 and self.verbose:
                 print('Completed Episodes = {}'.format(episode))
 
             # update epsilon decay value
