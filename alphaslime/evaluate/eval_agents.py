@@ -23,13 +23,13 @@ class EvaluateGameMA:
 
         #TODO: add functionality for human controlled agent
     '''
-    def __init__(self, agent_right:Agent, agent_left:Agent, base_dir_path, env_id="SlimeVolley-v0", render=False, time_delay=0.03) -> None:
+    def __init__(self, agent_right:Agent, agent_left:Agent, base_dir_path, env, render=False, time_delay=0.03) -> None:
         self.agent_right = agent_right
         self.agent_left = agent_left
         self.RENDER = render
         # base directory to save data
         self.base_dir_path = base_dir_path
-        self.env = gym.make(env_id)
+        self.env = env
         self.delay = time_delay
     
     def evaluate_episode(self):
@@ -99,13 +99,12 @@ class EvaluateGameSA:
 
         #TODO: add functionality for human controlled agent
     '''
-    def __init__(self, agent:Agent,  base_dir_path, env_id="SlimeVolley-v0", render=False, time_delay=0.03, seed=0) -> None:
+    def __init__(self, agent:Agent,  base_dir_path, env, render=False, time_delay=0.03) -> None:
         self.agent = agent
         self.RENDER = render
         # base directory to save data
         self.base_dir_path = base_dir_path
-        self.env = gym.make(env_id)
-        self.env.seed(seed)
+        self.env = env
         self.delay = time_delay
     
     def evaluate_episode(self):

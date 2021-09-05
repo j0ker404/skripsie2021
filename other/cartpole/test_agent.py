@@ -9,6 +9,7 @@ sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from alphaslime.evaluate.eval_agents import EvaluateGameSA
 from alphaslime.agents.other.semiGradSarsa import SemiGradSarsa
+from alphaslime.approx.linearq import LinearQApprox
 
 from pandas import read_csv
 import numpy as np
@@ -33,6 +34,8 @@ if __name__ == '__main__':
     training_episodes = 300
     observation_dimension=4
     action_table = [0, 1]
+    # q function approximator
+    q_hat = LinearQApprox()
     
     env_id = 'CartPole-v1'
     env = gym.make(env_id)
@@ -45,14 +48,12 @@ if __name__ == '__main__':
         'epsilon': epsilon,
         'action_table': action_table,
         'd': observation_dimension,
-        'is_MA': False,
-        'env_id': env_id,
-        'SEED': seed,
         't_max': 3000,
         'max_score': 200,
         'episode_printer': 100,
         'env': env,
-        'weights':None
+        'weights':None,
+        'q_hat': q_hat
     }
 
     agent = SemiGradSarsa(config)
@@ -62,7 +63,7 @@ if __name__ == '__main__':
 
     base_dir = './'
     RENDER = False
-    eval_game = EvaluateGameSA(agent=agent, base_dir_path=base_dir, render=RENDER, env_id=env_id, seed=seed)
+    eval_game = EvaluateGameSA(agent=agent, base_dir_path=base_dir, render=RENDER, env=env)
 
     N = 100
     # run N episodes
