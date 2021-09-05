@@ -1,14 +1,6 @@
 import numpy as np
-import gym
 
-from alphaslime.agents.baseline import BaselineAgent
-
-# from alphaslime.agents.agent import Agent
 from alphaslime.agents.greedyAgent import GreedyAgent
-
-from alphaslime.envgame.slenv import SLenv
-
-from alphaslime.approx.linearq import LinearQApprox
 
 
 class SemiGradSarsa(GreedyAgent):
@@ -115,7 +107,7 @@ class SemiGradSarsa(GreedyAgent):
         '''
 
         done, reward, obs_next, action_next, other_data =  super().forward(obs, action)
-        
+
         max_val_array = np.zeros((2,))
         action_next = None
         q_hat_next = None
@@ -193,7 +185,7 @@ class SemiGradSarsa(GreedyAgent):
         }
         
 
-        done, reward, obs_next, action_next, other_data
+        return done, reward, obs_next, action_next, other_data
 
 
     def train_agent(self, episodes, reset_data=True):
