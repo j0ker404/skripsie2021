@@ -10,11 +10,12 @@ class SemiGradSarsa(GreedyAgent):
     '''
 
     # def __init__(self, alpha=1/10, epsilon=0.1, gamma=0.9, d=12, env_id=None, opponent=None, weights=None, is_MA=True, SEED=None, *args, **kwargs) -> None:
-    def __init__(self, config:dict) -> None:
+    def __init__(self, config:dict, verbose=False) -> None:
         '''
             config: dict, with configuration values
 
-            alpha=1/10,  gamma=0.9 
+            verbose: boolean, if True, prints debug info to screen
+
             config: key-values
 
             - alpha: alpha value (float)
@@ -37,7 +38,8 @@ class SemiGradSarsa(GreedyAgent):
         self.alpha = config['alpha']
         # self.epsilon = epsilon
         self.gamma = config['gamma']
-
+        
+        self.verbose = verbose
 
         # environment
         # if env_id is None:
