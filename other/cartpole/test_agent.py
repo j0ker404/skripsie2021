@@ -1,8 +1,6 @@
 import sys
 import os
 
-from numpy.random.mtrand import seed
-
 PACKAGE_PARENT = '../../'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
@@ -14,7 +12,6 @@ from alphaslime.approx.linearq import LinearQApprox
 from pandas import read_csv
 import numpy as np
 
-import random
 import gym
 
 if __name__ == '__main__':
@@ -39,6 +36,7 @@ if __name__ == '__main__':
     
     env_id = 'CartPole-v1'
     env = gym.make(env_id)
+    env.seed(seed)
 
 
     
