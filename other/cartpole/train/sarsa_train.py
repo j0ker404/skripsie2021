@@ -7,9 +7,9 @@ SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from alphaslime.agents.other.semiGradSarsa import SemiGradSarsa
+from alphaslime.approx.linearq import LinearQApprox
 
 import numpy as np
-import random
 import gym
 
 if __name__ == '__main__':
@@ -24,10 +24,13 @@ if __name__ == '__main__':
     training_episodes = 300
     observation_dimension=4
     action_table = [0, 1]
-    
+
     env_id = 'CartPole-v1'
     env = gym.make(env_id)
-
+    env.seed(seed)
+    
+    # q function approximator
+    q_hat = LinearQApprox()
 
     
     config = {
@@ -36,14 +39,12 @@ if __name__ == '__main__':
         'epsilon': epsilon,
         'action_table': action_table,
         'd': observation_dimension,
-        'is_MA': False,
-        'env_id': env_id,
-        'SEED': seed,
         't_max': 3000,
         'max_score': 200,
         'episode_printer': 100,
         'env': env,
-        'weights':None
+        'weights':None,
+        'q_hat': q_hat
     }
 
     # agent = SemiGradSarsa(alpha=alpha, epsilon=epsilon, gamma=gamma, d=observation_dimension, is_MA=False, env_id=env_id, SEED=seed)
@@ -53,7 +54,7 @@ if __name__ == '__main__':
     # agent.MAX_SCORE = 200
     # change action space
 
-    agent.train(training_episodes)
+    agent.train_agent(training_episodes)
 
     weights = agent.w
     print('-'*99)
