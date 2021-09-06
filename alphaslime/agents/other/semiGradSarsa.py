@@ -197,6 +197,8 @@ class SemiGradSarsa(GreedyAgent):
 
             episodes: total number of episodes to play
 
+            return self
+
 
             #TODO: save training data
         '''
@@ -218,4 +220,6 @@ class SemiGradSarsa(GreedyAgent):
             
             # train episode
             t, episode_reward_value = self.episode_train()
+
+        return self
 
