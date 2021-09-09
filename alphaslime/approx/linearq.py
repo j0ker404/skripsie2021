@@ -30,7 +30,7 @@ class LinearQApprox(QApprox):
         w = w.reshape((-1,1))
         # print('w \n{}'.format(w))
         # print('x \n{}'.format(x))
-        q_hat = w.T.dot(x)
+        q_hat = (w.T.dot(x)).reshape((1,))
         return q_hat
 
     def grad_q(self,state,action,w):
