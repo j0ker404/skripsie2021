@@ -16,7 +16,8 @@ if __name__ == '__main__':
     epsilon = 1
     gamma = 0.99
     training_episodes = 10
-    agent = SemiGradSarsa(alpha=alpha, epsilon=epsilon, gamma=gamma)
+    d=12
+    agent = SemiGradSarsa(alpha=alpha, epsilon=epsilon, gamma=gamma, d=12)
     agent.train(training_episodes)
 
     weights = agent.w

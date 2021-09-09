@@ -26,7 +26,7 @@ if __name__ == '__main__':
     np.random.seed(seed)    
 
     alpha = 0.95 # step size
-    epsilon = 1
+    epsilon = 0
     gamma = 0.995
     training_episodes = 300
     observation_dimension=4

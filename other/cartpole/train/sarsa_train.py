@@ -18,7 +18,7 @@ if __name__ == '__main__':
     seed = 42
     np.random.seed(seed)    
 
-    alpha = 0.95 # step size
+    alpha = .5 # step size
     epsilon = 1
     gamma = 0.995
     training_episodes = 300
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     # agent.MAX_SCORE = 200
     # change action space
 
-    agent.train_agent(training_episodes)
+    agent.train(training_episodes)
 
     weights = agent.w
     print('-'*99)
