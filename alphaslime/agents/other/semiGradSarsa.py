@@ -67,6 +67,9 @@ class SemiGradSarsa(GreedyAgent):
         # exponetial epsilon decay
         self.EPSILON_DECAY_BASE = 0.997
 
+        # create empty training data list
+        self.train_data = []
+
     
     def reward_threshold_updater(self):
         '''
@@ -108,9 +111,8 @@ class SemiGradSarsa(GreedyAgent):
             }
         '''
 
-        done, reward, obs_next, action_next, other_data =  super().forward(obs, action)
+        # done, reward, obs_next, action_next, other_data =  super().forward(obs, action)
 
-        max_val_array = np.zeros((2,))
         action_next = None
         q_hat_next = None
 
@@ -127,18 +129,15 @@ class SemiGradSarsa(GreedyAgent):
             beta = reward - q_hat
 
             # update weights
-            self.w[:, action_index] = self.w[:, action_index] + \
-                self.alpha*beta*grad_q_hat.reshape((-1))
+            update = self.alpha*beta*grad_q_hat.reshape((-1,)) 
+            self.w[:, action_index] += update
+                
 
             # normalize weights
-            max_val = np.abs(self.w[:, action_index].max(axis=0))
-            min_val = np.abs(self.w[:, action_index].min(axis=0))
-            max_val_array[0] = max_val
-            max_val_array[1] = min_val
+            # abs_max = np.abs(self.w[:, action_index]).max(axis=0) 
 
-            abs_max = np.max(max_val_array)
-            if abs_max > 0:
-                self.w[:, action_index] = self.w[:, action_index] / abs_max  
+            # if abs_max > 0:
+            #     self.w[:, action_index] = self.w[:, action_index] / abs_max  
             # go to next episode
         else:
             action_next = self.get_action(obs_next)
@@ -159,26 +158,22 @@ class SemiGradSarsa(GreedyAgent):
 
 
             delta = (reward + self.gamma*q_hat_next - q_hat)
-        
-            self.w[:, action_index] = self.w[:, action_index] + \
-                self.alpha*delta*grad_q_hat.reshape((-1))
+
+            update = self.alpha*delta*grad_q_hat.reshape((-1,))
+            self.w[:, action_index] += update
+
 
             # normalize weight
-            max_val = np.abs(self.w[:, action_index].max(axis=0))
-            min_val = np.abs(self.w[:, action_index].min(axis=0))
-            max_val_array[0] = max_val
-            max_val_array[1] = min_val
-
-            abs_max = np.max(max_val_array)
-            if abs_max > 0:
-                self.w[:, action_index] = self.w[:, action_index] / abs_max 
+            # abs_max = np.abs(self.w[:, action_index]).max(axis=0) 
+            # if abs_max > 0:
+            #     self.w[:, action_index] = self.w[:, action_index] / abs_max 
 
             # ---------------------------------------------------
 
             # ---------------------------------------------------
             # update state-obeservation and action-state
-            obs = obs_next
-            action = action_next
+            # obs = obs_next
+            # action = action_next
             # ---------------------------------------------------
         
         other_data  = {
@@ -204,10 +199,14 @@ class SemiGradSarsa(GreedyAgent):
         '''
         if reset_data:
             # reset weights
-            self.w = np.zeros((self.d+1, self.max_actions))
+            # self.w = np.zeros((self.d+1, self.max_actions))
+            # self.w = np.zeros((self.d, self.max_actions))
+            self._reset()
             # self.epsilon = 1
             self.reward_threshold = 0
 
+        # display weights
+        # print('init: weight = {}'.format(self.w))
         # iterate episodes
         for episode in range(episodes):
             # training output display
@@ -220,6 +219,14 @@ class SemiGradSarsa(GreedyAgent):
             
             # train episode
             t, episode_reward_value = self.episode_train()
+            
+            # display weights
+            # print('weight = {}'.format(self.w))
 
+            data = [t, episode_reward_value] 
+            # append trained data to data list
+            self.train_data.append(data)
+        
+        self.env.close()
         return self
 
