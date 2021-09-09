@@ -48,7 +48,9 @@ class GreedyAgent(Agent):
             # configure weight to have extra dimension i.e. d+1
             # the extra dimension is used as a bias term/offset
 
-            self.w = np.zeros((self.d+1, self.max_actions))
+            # self.w = np.zeros((self.d+1, self.max_actions))
+            # self.w = np.zeros((self.d, self.max_actions))
+            self._reset()
         else:
             # trained data
             self.w = weights
@@ -78,6 +80,17 @@ class GreedyAgent(Agent):
             q_values = np.array(q_values)
             action_index = np.argmax(q_values)
         return self.action_table[action_index]
+
+    
+    def _reset(self):
+        '''
+            Reset data of agent
+
+
+            # set weights to init value
+        '''
+
+        self.w = np.zeros((self.d+1, self.max_actions))
 
 
     
