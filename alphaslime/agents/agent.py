@@ -113,7 +113,7 @@ class Agent:
         # get action to execute based on state
         action = self.get_action(obs)
 
-        while t < self.T_MAX and not done:
+        while not done:
             '''
                 other_data: dict | None
                     stores other data obtained from making an action
