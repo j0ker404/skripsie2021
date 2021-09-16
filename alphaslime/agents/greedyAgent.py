@@ -76,7 +76,7 @@ class GreedyAgent(Agent):
             action_index = np.random.randint(low=0, high=self.max_actions)
         else:
             q_values = [self.q_hat.state_action_value(
-                state=state, action=self.action_table[action_index], w=self.w[:, action_index]) for action_index in range(self.max_actions)]
+                state=state, action=self.action_table[action_index], w=self.w) for action_index in range(self.max_actions)]
             q_values = np.array(q_values)
             action_index = np.argmax(q_values)
         return self.action_table[action_index]
@@ -90,7 +90,11 @@ class GreedyAgent(Agent):
             # set weights to init value
         '''
 
-        self.w = np.zeros((self.d+1, self.max_actions))
+        # self.w = np.zeros((self.d+1, self.max_actions))
+        # self.w = np.zeros((self.d*self.max_actions+1, 1))
+        # self.w = np.zeros((self.d*self.max_actions, 1))
+        # 4096 = self.FEATURE_VECTOR_LENGTH , TODO add property
+        self.w = np.zeros((4096*self.max_actions +1, 1))
 
 
     
