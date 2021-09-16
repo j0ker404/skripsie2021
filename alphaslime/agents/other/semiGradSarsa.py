@@ -3,6 +3,7 @@ import numpy as np
 from alphaslime.agents.greedyAgent import GreedyAgent
 
 
+
 class SemiGradSarsa(GreedyAgent):
     '''
         Implement Episodic Semi-gradient Sarsa for Estimating
@@ -70,6 +71,7 @@ class SemiGradSarsa(GreedyAgent):
         # create empty training data list
         self.train_data = []
 
+
     
     def reward_threshold_updater(self):
         '''
@@ -95,6 +97,95 @@ class SemiGradSarsa(GreedyAgent):
 
         return bar
 
+    # def forward(self, obs, action):
+    #     '''
+    #     one time step train
+
+    #         obs: current state observation
+
+    #         action: action to execute based on state
+
+    #         return done, reward, obs_next, action_next, other_data
+
+    #         other_data = {
+    #             q_hat,
+    #             q_hat_next
+    #         }
+    #     '''
+
+    #     # done, reward, obs_next, action_next, other_data =  super().forward(obs, action)
+
+    #     action_next = None
+    #     q_hat_next = None
+
+    #     #  take action, go to next time step
+    #     obs_next, reward, done, info = self.env.step(action)
+
+    #     action_index = self.action_table.index(action)
+    #     # if at terminal state
+    #     if done:
+    #         q_hat = self.q_hat.state_action_value(
+    #             state=obs, action=action, w=self.w[:, action_index])
+    #         grad_q_hat = self.q_hat.grad_q(
+    #             state=obs, action=action, w=self.w[:, action_index])
+    #         beta = reward - q_hat
+
+    #         # update weights
+    #         update = self.alpha*beta*grad_q_hat.reshape((-1,)) 
+    #         self.w[:, action_index] += update
+                
+
+    #         # normalize weights
+    #         # abs_max = np.abs(self.w[:, action_index]).max(axis=0) 
+
+    #         # if abs_max > 0:
+    #         #     self.w[:, action_index] = self.w[:, action_index] / abs_max  
+    #         # go to next episode
+    #     else:
+    #         action_next = self.get_action(obs_next)
+
+    #         # ---------------------------------------------------
+    #         # update weight vector
+
+    #         action_next_index = self.action_table.index(action_next)
+
+    #         q_hat = self.q_hat.state_action_value(
+    #             state=obs, action=action, w=self.w[:, action_index])
+
+    #         grad_q_hat = self.q_hat.grad_q(
+    #             state=obs, action=action, w=self.w[:, action_index])
+
+    #         q_hat_next = self.q_hat.state_action_value(
+    #             state=obs_next, action=action_next, w=self.w[:, action_next_index])
+
+
+    #         delta = (reward + self.gamma*q_hat_next - q_hat)
+
+    #         update = self.alpha*delta*grad_q_hat.reshape((-1,))
+    #         self.w[:, action_index] += update
+
+
+    #         # normalize weight
+    #         # abs_max = np.abs(self.w[:, action_index]).max(axis=0) 
+    #         # if abs_max > 0:
+    #         #     self.w[:, action_index] = self.w[:, action_index] / abs_max 
+
+    #         # ---------------------------------------------------
+
+    #         # ---------------------------------------------------
+    #         # update state-obeservation and action-state
+    #         # obs = obs_next
+    #         # action = action_next
+    #         # ---------------------------------------------------
+        
+    #     other_data  = {
+    #         'q_hat': q_hat,
+    #         'q_hat_next': q_hat_next
+    #     }
+        
+    #     return done, reward, obs_next, action_next, other_data
+
+
     def forward(self, obs, action):
         '''
         one time step train
@@ -110,7 +201,7 @@ class SemiGradSarsa(GreedyAgent):
                 q_hat_next
             }
         '''
-
+    
         # done, reward, obs_next, action_next, other_data =  super().forward(obs, action)
 
         action_next = None
@@ -123,14 +214,21 @@ class SemiGradSarsa(GreedyAgent):
         # if at terminal state
         if done:
             q_hat = self.q_hat.state_action_value(
-                state=obs, action=action, w=self.w[:, action_index])
+                state=obs, action=action, w=self.w)
             grad_q_hat = self.q_hat.grad_q(
-                state=obs, action=action, w=self.w[:, action_index])
+                state=obs, action=action, w=self.w)
             beta = reward - q_hat
 
             # update weights
-            update = self.alpha*beta*grad_q_hat.reshape((-1,)) 
-            self.w[:, action_index] += update
+            # update = self.alpha*beta*grad_q_hat.reshape((-1,)) 
+            update = self.alpha*beta*grad_q_hat 
+            # self.w[:, action_index] += update
+
+            # normalize
+            abs_max = np.abs(update).max(axis=0) 
+            if abs_max > 0:
+                update = update / abs_max 
+            self.w += update
                 
 
             # normalize weights
@@ -148,25 +246,38 @@ class SemiGradSarsa(GreedyAgent):
             action_next_index = self.action_table.index(action_next)
 
             q_hat = self.q_hat.state_action_value(
-                state=obs, action=action, w=self.w[:, action_index])
+                state=obs, action=action, w=self.w)
 
             grad_q_hat = self.q_hat.grad_q(
-                state=obs, action=action, w=self.w[:, action_index])
+                state=obs, action=action, w=self.w)
 
             q_hat_next = self.q_hat.state_action_value(
-                state=obs_next, action=action_next, w=self.w[:, action_next_index])
+                state=obs_next, action=action_next, w=self.w)
 
-
+            # print('q_hat  = \n{}'.format(q_hat))
+            # print('grad_q_hat  = \n{}'.format(grad_q_hat))
+            # print('q_hat_next  = \n{}'.format(q_hat_next))
             delta = (reward + self.gamma*q_hat_next - q_hat)
 
-            update = self.alpha*delta*grad_q_hat.reshape((-1,))
-            self.w[:, action_index] += update
+            # update = self.alpha*delta*grad_q_hat.reshape((-1,))
+            update = self.alpha*delta*grad_q_hat
+            # normalize
+            abs_max = np.abs(update).max(axis=0) 
+            if abs_max > 0:
+                update = update / abs_max 
+            
+            # update weight
+            # self.w[:, action_index] += update
+            self.w += update
 
 
             # normalize weight
             # abs_max = np.abs(self.w[:, action_index]).max(axis=0) 
             # if abs_max > 0:
             #     self.w[:, action_index] = self.w[:, action_index] / abs_max 
+            # abs_max = np.abs(self.w).max(axis=0) 
+            # if abs_max > 0:
+            #     self.w = self.w / abs_max 
 
             # ---------------------------------------------------
 
@@ -180,7 +291,6 @@ class SemiGradSarsa(GreedyAgent):
             'q_hat': q_hat,
             'q_hat_next': q_hat_next
         }
-        
 
         return done, reward, obs_next, action_next, other_data
 
@@ -216,6 +326,9 @@ class SemiGradSarsa(GreedyAgent):
             # update epsilon decay value
             if self.EPSILON_DECAY_STATE:
                 self.epsilon = np.power(self.EPSILON_DECAY_BASE, episode)
+                if self.epsilon < self.MINIMUM_EPSILON:
+                    self.epsilon = self.MINIMUM_EPSILON
+                    self.EPSILON_DECAY_STATE = False
             
             # train episode
             t, episode_reward_value = self.episode_train()
@@ -227,6 +340,6 @@ class SemiGradSarsa(GreedyAgent):
             # append trained data to data list
             self.train_data.append(data)
         
-        self.env.close()
+        # self.env.close()
         return self
 
