@@ -91,10 +91,10 @@ class GreedyAgent(Agent):
         '''
 
         # self.w = np.zeros((self.d+1, self.max_actions))
-        # self.w = np.zeros((self.d*self.max_actions+1, 1))
+        self.w = np.zeros((self.d*self.max_actions+1, 1))
         # self.w = np.zeros((self.d*self.max_actions, 1))
         # 4096 = self.FEATURE_VECTOR_LENGTH , TODO add property
-        self.w = np.zeros((4096*self.max_actions +1, 1))
+        # self.w = np.zeros((4096*self.max_actions +1, 1))
 
 
     

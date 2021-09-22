@@ -67,36 +67,38 @@ class LinearQApprox(QApprox):
             return ndarray (n_max_actions*d+1, 1)
         '''
         # https://danieltakeshi.github.io/2016/10/31/going-deeper-into-reinforcement-learning-understanding-q-learning-and-linear-function-approximation/
+        # '''
+        action_index = self.action_table.index(action)
+        d = len(state)
+        # print('d = {}'.format(d))
+        feature_vector = np.zeros((d*self.MAX_ACTIONS, ))
+        base_index = d*action_index
+        for i, feature in enumerate(state):
+            feature_vector[base_index + i] = feature 
+        
+        feature_vector = feature_vector.reshape((-1,1))
+        # feature_vector = np.array(state).reshape((-1,1))
+        # add bias term
+        feature_vector = np.vstack((feature_vector, np.array([1])))
+        # print('feature vector = \n{}'.format(feature_vector))
+        
+        # '''
         '''
+            # so we are making a feature vector from tile coding
+
             action_index = self.action_table.index(action)
-            d = len(state)
-            # print('d = {}'.format(d))
-            feature_vector = np.zeros((d*self.MAX_ACTIONS, ))
-            base_index = d*action_index
-            for i, feature in enumerate(state):
-                feature_vector[base_index + i] = feature 
-            
-            feature_vector = feature_vector.reshape((-1,1))
-            # feature_vector = np.array(state).reshape((-1,1))
-            # add bias term
+            # create empty obs feature vector
+            feature_vector = np.zeros((self.FEATURE_VECTOR_LENGTH*self.MAX_ACTIONS, ))
+            obs_tile_indices = self._get_tile_indices(state)
+            obs_tiles = np.zeros((self.FEATURE_VECTOR_LENGTH,))
+            obs_tiles[obs_tile_indices] = 1
+            base_index = self.FEATURE_VECTOR_LENGTH*action_index
+            indices = np.arange(base_index, base_index+self.FEATURE_VECTOR_LENGTH,step=1)
+            # set elements of feature vectors
+            feature_vector[indices] = obs_tiles
+
+            feature_vector = feature_vector.reshape(-1,1)
             feature_vector = np.vstack((feature_vector, np.array([1])))
-            # print('feature vector = \n{}'.format(feature_vector))
         
         '''
-
-        # so we are making a feature vector from tile coding
-
-        action_index = self.action_table.index(action)
-        # create empty obs feature vector
-        feature_vector = np.zeros((self.FEATURE_VECTOR_LENGTH*self.MAX_ACTIONS, ))
-        obs_tile_indices = self._get_tile_indices(state)
-        obs_tiles = np.zeros((self.FEATURE_VECTOR_LENGTH,))
-        obs_tiles[obs_tile_indices] = 1
-        base_index = self.FEATURE_VECTOR_LENGTH*action_index
-        indices = np.arange(base_index, base_index+self.FEATURE_VECTOR_LENGTH,step=1)
-        # set elements of feature vectors
-        feature_vector[indices] = obs_tiles
-
-        feature_vector = feature_vector.reshape(-1,1)
-        feature_vector = np.vstack((feature_vector, np.array([1])))
         return feature_vector
