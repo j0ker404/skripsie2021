@@ -13,3 +13,5 @@ alphaslime/approx/__pycache__/q.cpython-38.pyc
 alphaslime/agents/other/__pycache__/semiGradSarsa.cpython-38.pyc
 alphaslime/agents/selfplay/__pycache__/sarsa.cpython-38.pyc
 alphaslime/approx/__pycache__/tile.cpython-38.pyc
+other/cartpole/algs/qlearn/dqn_models/
+other/cartpole/algs/qlearn/dqn_rewards
