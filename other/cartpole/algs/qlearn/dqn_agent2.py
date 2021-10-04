@@ -110,7 +110,7 @@ class DQNAgent:
         ret_eps = max(slope * i_epsiode + 1.0, min_eps)
         return ret_eps    
 
-    def train(self, EPISODES, is_progress=False, threshold=195):
+    def train(self, EPISODES, is_progress=False, threshold=195, running_avg_len=100):
         '''
             Train agent
 
@@ -124,8 +124,7 @@ class DQNAgent:
         if is_progress:
             ranger = tqdm(ranger)
 
-        scores_deque = deque(maxlen=100)
-        scores_array = []
+        rewards_deque = deque(maxlen=running_avg_len)
         avg_scores_array = []    
         for episode in ranger:
             # update epsilon value
@@ -142,20 +141,19 @@ class DQNAgent:
             self.loss_list.append(episode_data[1])
             self.epsilon_list.append(self.epsilon)   
 
-            score = episode_data[0]
-            scores_deque.append(score)
-            scores_array.append(score)
+            reward = episode_data[0]
+            rewards_deque.append(reward)
             
-            avg_score = np.mean(scores_deque)
+            avg_score = np.mean(rewards_deque)
             avg_scores_array.append(avg_score)
 
-            if len(scores_deque) == scores_deque.maxlen:
+            if len(rewards_deque) == rewards_deque.maxlen:
                 ### 195.0: for cartpole-v0 and 475 for v1
-                if np.mean(scores_deque) >= threshold: 
+                if np.mean(rewards_deque) >= threshold: 
                     print('\n Environment solved in {:d} episodes!\tAverage Score: {:.2f}'. \
-                        format(episode, np.mean(scores_deque)))
+                        format(episode, np.mean(rewards_deque)))
                     break
-        return scores_array, avg_scores_array
+        return avg_scores_array
 
    
 
