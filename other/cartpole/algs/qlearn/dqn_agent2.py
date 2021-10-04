@@ -269,22 +269,17 @@ class DQNAgent:
 
         # Compute prediction and loss
         q_values = self.q_model(obs_batch)
-        pred, _ = torch.max(q_values, axis=1)
         Q_expected = q_values.gather(1, actions)
 
-        # pred = q_values.gather(1, action_batch)
         target_max_q_values = self.get_max_target_q_vals(obs_next_batch)
-        # y = reward_batch + self.gamma*target_max_q_values
         y = reward_batch + self.gamma*target_max_q_values*(1-done_batch)
         Q_target = y.unsqueeze(1)
 
         # Backpropagation
         self.optimizer.zero_grad()
         loss = self.loss(Q_expected, Q_target)
-
         loss.backward()
         self.optimizer.step()
-
 
         return loss.item()
 
