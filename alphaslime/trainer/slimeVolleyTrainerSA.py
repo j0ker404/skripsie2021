@@ -89,7 +89,7 @@ class SlimeVolleyTrainerSA(Trainer):
         gamma = agent.gamma.item()
         avg_reward = avg_rewards[-1]
 
-        model_info = "SV_gamma_{}_lr_rate_{}_reward_{}".format(str(gamma), str(learning_rate, str(avg_reward)))
+        model_info = "SV_gamma_{}_lr_rate_{}_reward_{}".format(str(gamma), str(learning_rate), str(avg_reward))
 
         path = self.BASE_PATH + model_info + '_model' +   '.pt'
 
