@@ -91,7 +91,7 @@ class SlimeVolleyTrainerSA(Trainer):
 
         model_info = "SV_gamma_{}_lr_rate_{}_reward_{}".format(str(gamma), str(learning_rate), str(avg_reward))
 
-        path = self.BASE_PATH + model_info + '_model' +   '.pt'
+        path = self.BASE_PATH + model_info + '_model' + '.pt'
 
         # save model
         agent.save_q_model(path)
@@ -102,13 +102,13 @@ class SlimeVolleyTrainerSA(Trainer):
             'epsilon': agent.epsilon_list,
             'losses': agent.loss_list
         }
-        path = self.BASE_PATH  + model_info + '_data' '.pkl'
+        path = self.BASE_PATH  + model_info + '_data' + '.pkl'
         with open(path, 'wb') as f:
             pickle.dump(training_data, f)
 
 
         # save hyperparams
-        path = self.BASE_PATH  + model_info + '_hyper' '.pkl'
+        path = self.BASE_PATH  + model_info + '_hyper' + '.pkl'
         with open(path, 'wb') as f:
             pickle.dump(hyperparams, f)
 
