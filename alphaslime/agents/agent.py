@@ -56,9 +56,9 @@ class Agent:
         #     self.action_table = action_table
 
 
-        self.T_MAX =  config['t_max']
-        self.MAX_SCORE = config['max_score']
-        self.episode_printer = config['episode_printer']
+        # self.T_MAX =  config['t_max']
+        # self.MAX_SCORE = config['max_score']
+        # self.episode_printer = config['episode_printer']
         # configure environment
         self.env = config['env']
         self.action_table = config['action_table']
