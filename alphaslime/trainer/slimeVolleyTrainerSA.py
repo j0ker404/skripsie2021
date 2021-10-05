@@ -98,6 +98,7 @@ class SlimeVolleyTrainerSA(Trainer):
 
         # save training data
         training_data = {
+            'avg_rewards': avg_rewards,
             'rewards': agent.rewards,
             'epsilon': agent.epsilon_list,
             'losses': agent.loss_list
