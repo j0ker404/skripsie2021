@@ -9,8 +9,8 @@ class BaselineAgent(Agent):
         Slimeball gym environment
     '''
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, config:dict) -> None:
+        super().__init__(config)
         self.policy = slimevolleygym.BaselinePolicy() 
 
     def get_action(self, state):
