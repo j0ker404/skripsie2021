@@ -7,19 +7,26 @@
 '''
 
 
+from gym.core import Env
 import numpy as np
 import gym
 from ..agents.agent import Agent 
+from gym import Wrapper
 
-class SLenv():
+class SLenv(Wrapper):
 
-    def __init__(self,opponent:Agent, env_id="SlimeVolley-v0") -> None:
-        
-        # opponent agent: left player
+    def __init__(self, env: Env, opponent:Agent) -> None:
+        super().__init__(env)
+        # # opponent agent: left player
         self.opponent = opponent
 
-        # set environment
-        self.env = gym.make(env_id)
+    # def __init__(self,opponent:Agent, env_id="SlimeVolley-v0") -> None:
+        
+        # # opponent agent: left player
+        # self.opponent = opponent
+
+        # # set environment
+        # self.env = gym.make(env_id)
         
 
     def reset(self):
