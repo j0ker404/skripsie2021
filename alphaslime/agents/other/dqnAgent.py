@@ -31,7 +31,13 @@ class DQNAgent(Agent):
         self.epsilon_decay:Epsilon = config['epsilon_decay']
 
         # instantsiat target model
-        self.q_target = DQN(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes, device=self.q_model.device).to()
+        self.q_type = config['q_type']
+        self.q_target = self.q_type(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes, device=self.q_model.device).to()
+        # try:
+        #     self.q_type = config['q_type']
+        #     self.q_target = self.q_type(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes, device=self.q_model.device).to()
+        # except:
+        #     self.q_target = DQN(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes, device=self.q_model.device).to()
         self.n_actions = self.env.action_space.n
 
         # create replay buffer
@@ -111,13 +117,15 @@ class DQNAgent(Agent):
             
             avg_score = np.mean(rewards_deque)
             avg_scores_array.append(avg_score)
+            
 
-            if len(rewards_deque) == rewards_deque.maxlen:
-                ### 195.0: for cartpole-v0 and 475 for v1
-                if np.mean(rewards_deque) >= threshold: 
-                    print('\n Environment solved in {:d} episodes!\tAverage Score: {:.2f}'. \
-                        format(episode, np.mean(rewards_deque)))
-                    break
+            if threshold:
+                if len(rewards_deque) == rewards_deque.maxlen:
+                    ### 195.0: for cartpole-v0 and 475 for v1
+                    if np.mean(rewards_deque) >= threshold: 
+                        print('\n Environment solved in {:d} episodes!\tAverage Score: {:.2f}'. \
+                            format(episode, np.mean(rewards_deque)))
+                        break
         return avg_scores_array
 
    
