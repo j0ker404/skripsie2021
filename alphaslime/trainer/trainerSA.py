@@ -1,3 +1,4 @@
+from typing import Dict
 from alphaslime.agents.agent import Agent
 from alphaslime.trainer.trainer import Trainer
 
@@ -16,7 +17,7 @@ class TrainerSA(Trainer):
 
         path: (str) base path for saving data, in the form of './path/' 
     """
-    def __init__(self, CONSTANTS: dict, q_hat, agent:Agent) -> None:
+    def __init__(self, CONSTANTS: dict) -> None:
         super().__init__(CONSTANTS)
         # PATH: BASE PATH to save data
         self.BASE_PATH = self.CONSTANTS['PATH']
@@ -28,8 +29,8 @@ class TrainerSA(Trainer):
         self.n_actions = self.env.action_space.n
         self.len_obs_space = self.env.observation_space.shape[0]
 
-        self.q_hat = q_hat
-        self.agent = agent
+        # self.q_type = q_type
+        # self.agent = agent
 
         # create directory if not present
         if not os.path.exists(self.BASE_PATH):
@@ -59,9 +60,11 @@ class TrainerSA(Trainer):
         reward_threshold = hyperparams['threshold']
         is_progress = hyperparams['is_progress']
         layer_sizes = hyperparams['layer_sizes']
+        q_type = hyperparams['q_type']
+        agent_type = hyperparams['agent_type']
 
         # q function approximator
-        q_hat = self.q_hat(lr=learning_rate, layer_sizes=layer_sizes, device=self.device).to(self.device)
+        q_hat = q_type(lr=learning_rate, layer_sizes=layer_sizes, device=self.device).to(self.device)
 
         # set config file for agent
         config = {
@@ -74,17 +77,18 @@ class TrainerSA(Trainer):
             'batch_size': MINI_BATCH_SIZE,
             'exp_mem_size': MEMORY_SIZE,
             'TARGET_UPDATE': TARGET_UPDATE,
-            'epsilon_decay': epsilon_decay_model
+            'epsilon_decay': epsilon_decay_model,
+            'q_type': q_type,
         }
 
         # agent 
-        agent = self.agent(config)
+        agent = agent_type(config)
         # train agent
         avg_rewards = agent.train(EPISODES, is_progress=is_progress, threshold=reward_threshold)
 
         return self.save_data(avg_rewards, agent, hyperparams)
 
-    def save_data(self, avg_rewards, agent:Agent, hyperparams:dict):
+    def save_data(self, avg_rewards, agent:Agent, hyperparams:dict, agent_config:dict):
         '''
             Save training data to disk
 
@@ -121,6 +125,17 @@ class TrainerSA(Trainer):
         with open(path, 'wb') as f:
             pickle.dump(hyperparams, f)
 
-        
+        # save agent config
+        path = self.BASE_PATH  + model_info + '_agent_cfg' + '.pkl'
+        filenames.append(path)
+        with open(path, 'wb') as f:
+            pickle.dump(agent_config, f)
+
+        # save CONSTANTS
+        path = self.BASE_PATH  + model_info + '_CONSTANTS' + '.pkl'
+        filenames.append(path)
+        with open(path, 'wb') as f:
+            pickle.dump(self.CONSTANTS, f)
+
         return filenames
 
