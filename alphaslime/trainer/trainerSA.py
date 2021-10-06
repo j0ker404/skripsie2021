@@ -44,6 +44,9 @@ class TrainerSA(Trainer):
 
         Args:
             hyperparams (dict): hyper parameters for training agent
+
+
+        return: filenames:list, list of saved file
         """
         gamma = hyperparams['gamma']
         epsilon = hyperparams['epsilon']
@@ -79,13 +82,15 @@ class TrainerSA(Trainer):
         # train agent
         avg_rewards = agent.train(EPISODES, is_progress=is_progress, threshold=reward_threshold)
 
-        self.save_data(avg_rewards, agent, hyperparams)
+        return self.save_data(avg_rewards, agent, hyperparams)
 
     def save_data(self, avg_rewards, agent:Agent, hyperparams:dict):
         '''
             Save training data to disk
-        '''
 
+            return: filenames:list, list of saved filenames
+        '''
+        filenames = []
         learning_rate = agent.q_model.learning_rate
         gamma = agent.gamma.item()
         avg_reward = avg_rewards[-1]
@@ -93,7 +98,7 @@ class TrainerSA(Trainer):
         model_info = "gamma_{}_lr_rate_{}_reward_{}".format(str(gamma), str(learning_rate), str(avg_reward))
 
         path = self.BASE_PATH + model_info + '_model' + '.pt'
-
+        filenames.append(path)
         # save model
         agent.save_q_model(path)
 
@@ -105,12 +110,17 @@ class TrainerSA(Trainer):
             'losses': agent.loss_list
         }
         path = self.BASE_PATH  + model_info + '_data' + '.pkl'
+        filenames.append(path)
         with open(path, 'wb') as f:
             pickle.dump(training_data, f)
 
 
         # save hyperparams
         path = self.BASE_PATH  + model_info + '_hyper' + '.pkl'
+        filenames.append(path)
         with open(path, 'wb') as f:
             pickle.dump(hyperparams, f)
+
+        
+        return filenames
 
