@@ -86,7 +86,7 @@ class TrainerSA(Trainer):
         # train agent
         avg_rewards = agent.train(EPISODES, is_progress=is_progress, threshold=reward_threshold)
 
-        return self.save_data(avg_rewards, agent, hyperparams)
+        return self.save_data(avg_rewards, agent, hyperparams, config)
 
     def save_data(self, avg_rewards, agent:Agent, hyperparams:dict, agent_config:dict):
         '''
