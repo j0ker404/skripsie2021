@@ -1,4 +1,3 @@
-from typing import Dict
 from alphaslime.agents.agent import Agent
 from alphaslime.trainer.trainer import Trainer
 
@@ -93,6 +92,9 @@ class TrainerSA(Trainer):
             Save training data to disk
 
             return: filenames:list, list of saved filenames
+
+            TODO: There is an error pickling Wrappers of Env,
+                Currently just saving string version of env object
         '''
         filenames = []
         learning_rate = agent.q_model.learning_rate
@@ -125,15 +127,23 @@ class TrainerSA(Trainer):
         with open(path, 'wb') as f:
             pickle.dump(hyperparams, f)
 
+        #NOTE that we convert env obj to string in place for pickling
+
         # save agent config
         path = self.BASE_PATH  + model_info + '_agent_cfg' + '.pkl'
         filenames.append(path)
+        # print(agent_config)
+        # agent_config.pop('env')
+        agent_config['env'] = str(agent_config['env'])
+        # print(agent_config)
         with open(path, 'wb') as f:
             pickle.dump(agent_config, f)
 
-        # save CONSTANTS
+        # # save CONSTANTS
         path = self.BASE_PATH  + model_info + '_CONSTANTS' + '.pkl'
         filenames.append(path)
+        # # self.CONSTANTS.pop('env')
+        self.CONSTANTS['env'] = str(self.CONSTANTS['env'])
         with open(path, 'wb') as f:
             pickle.dump(self.CONSTANTS, f)
 
