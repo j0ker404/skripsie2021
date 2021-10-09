@@ -287,6 +287,8 @@ class DQNAgent(Agent):
             Returns the index of the action
             for the action to execute based on the 
             action table
+
+            return action: (Tensor), returns index for action
         '''
         # TODO: use action table for action selection
         sample = torch.rand((1,))
