@@ -57,6 +57,7 @@ class TrainerSA(Trainer):
         TARGET_UPDATE = hyperparams['TARGET_UPDATE']
         epsilon_decay_model = hyperparams['epsilon_decay']
         reward_threshold = hyperparams['threshold']
+        reward_is_threshold_stop = hyperparams['is_threshold_stop']
         is_progress = hyperparams['is_progress']
         layer_sizes = hyperparams['layer_sizes']
         q_type = hyperparams['q_type']
@@ -83,7 +84,7 @@ class TrainerSA(Trainer):
         # agent 
         agent = agent_type(config)
         # train agent
-        avg_rewards = agent.train(EPISODES, is_progress=is_progress, threshold=reward_threshold)
+        avg_rewards = agent.train(EPISODES, is_progress=is_progress, threshold=reward_threshold, is_threshold_stop=reward_is_threshold_stop)
 
         return self.save_data(avg_rewards, agent, hyperparams, config)
 
