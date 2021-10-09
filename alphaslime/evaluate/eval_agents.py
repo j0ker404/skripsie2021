@@ -11,8 +11,10 @@
 
 '''
 import gym
+from torch.functional import Tensor
 from alphaslime.agents.agent import Agent
 import time
+from tqdm import tqdm
 
 class EvaluateGameMA:
     '''
@@ -99,7 +101,16 @@ class EvaluateGameSA:
 
         #TODO: add functionality for human controlled agent
     '''
-    def __init__(self, agent:Agent,  base_dir_path, env, render=False, time_delay=0.03) -> None:
+    def __init__(self, agent:Agent, env, base_dir_path, render=False, time_delay=0.03) -> None:
+        """Contructor
+
+        Args:
+            agent (Agent): Initilised Agent to interact with environment
+            env (Gym.env): Evironment that agent interacts with
+            base_dir_path (str): Path to save data
+            render (bool, optional): Determine if agent-environment interaction must be drawn to screen. Defaults to False.
+            time_delay (float, optional): Time delay between each frame of Rendered interaction. Defaults to 0.03.
+        """
         self.agent = agent
         self.RENDER = render
         # base directory to save data
@@ -134,8 +145,11 @@ class EvaluateGameSA:
         # start episode
         while not done:
 
-            action = self.agent.get_action(obs1)
-
+            action_index = self.agent.get_action(obs1)
+            if type(action_index) == Tensor:
+                action = self.agent.action_table[action_index.item()]
+            else:
+                action = self.agent.action_table[action_index] 
             # go to next time step
             obs1, reward, done, info = self.env.step(action) # extra argument
 
@@ -148,13 +162,29 @@ class EvaluateGameSA:
                 self.env.render()
                 # sleep
                 time.sleep(self.delay)
-
-        # print("agent right's score:", total_reward)
-        # print("agent left's score:", -total_reward)
-
-        # return score
-
         return total_reward
+
+    def evaluate(self, EPISODES, is_progress_bar=False):
+        """Evaluate agent performance for given number of episodes
+
+        Args:
+            EPISODES (int): Number of Episodes to run
+            is_progress_bar (bool): Display progress bar. Default to False
+        
+        return:
+            episodes_reward: (list), total reward per episode
+        """
+        rewards = []
+        ranger = range(EPISODES)
+        if is_progress_bar:
+            ranger = tqdm(ranger)
+        
+        # evaluate episodes
+        for episode in ranger:
+            episode_reward = self.evaluate_episode()
+            rewards.append(episode_reward)
+        self.env.close()
+        return rewards
 
 
 
