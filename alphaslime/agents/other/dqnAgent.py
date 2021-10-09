@@ -34,6 +34,7 @@ class DQNAgent(Agent):
         self.q_type = config['q_type']
         # consider using a copy.deepcopy to create target net
         self.q_target = self.q_type(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes, device=self.q_model.device)
+        self.update_q_target_no_eval()
         # try:
         #     self.q_type = config['q_type']
         #     self.q_target = self.q_type(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes, device=self.q_model.device).to()
