@@ -32,7 +32,8 @@ class DQNAgent(Agent):
 
         # instantsiat target model
         self.q_type = config['q_type']
-        self.q_target = self.q_type(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes, device=self.q_model.device).to()
+        # consider using a copy.deepcopy to create target net
+        self.q_target = self.q_type(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes, device=self.q_model.device)
         # try:
         #     self.q_type = config['q_type']
         #     self.q_target = self.q_type(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes, device=self.q_model.device).to()
@@ -82,11 +83,25 @@ class DQNAgent(Agent):
 
         return q_max
     
-    def train(self, EPISODES, is_progress=False, threshold=195, running_avg_len=100):
+    def train(self, EPISODES, is_progress=False, threshold=195, is_threshold_stop=True, running_avg_len=100):
+        """Train agent
+
+        Args:
+            EPISODES (int): Max number of episodes to train
+            is_progress (bool, optional): Display training progress bar. Defaults to False.
+            threshold (int, optional): Average reward threshold to reach. Defaults to 195.
+            is_threshold_stop (bool, optional): Stop training once initial threshold is reached. Defaults to True.
+            running_avg_len (int, optional): Number of episodes rewards to average for running mean. Defaults to 100.
+
+        Returns:
+            [type]: [description]
+        """
         '''
             Train agent
 
             EPISODES: Total number of episodes to train
+
+            is_progess: (total)
         '''
         # self.init_replay_memory()
         # self.train_step_count = 128
@@ -95,7 +110,8 @@ class DQNAgent(Agent):
             ranger = tqdm(ranger)
 
         rewards_deque = deque(maxlen=running_avg_len)
-        avg_scores_array = []    
+        avg_scores_array = [] 
+        is_solved = False   
         for episode in ranger:
             # update epsilon value
             # self.epsilon = self.epsilon_annealing(episode, max_eps_episode, min_eps)
@@ -119,12 +135,15 @@ class DQNAgent(Agent):
             avg_scores_array.append(avg_score)
             
 
-            if threshold:
-                if len(rewards_deque) == rewards_deque.maxlen:
-                    ### 195.0: for cartpole-v0 and 475 for v1
-                    if np.mean(rewards_deque) >= threshold: 
+            
+            if len(rewards_deque) == rewards_deque.maxlen:
+                ### 195.0: for cartpole-v0 and 475 for v1
+                if np.mean(rewards_deque) >= threshold:
+                    if not is_solved: 
                         print('\n Environment solved in {:d} episodes!\tAverage Score: {:.2f}'. \
                             format(episode, np.mean(rewards_deque)))
+                        is_solved = not is_solved
+                    if is_threshold_stop:
                         break
         return avg_scores_array
 
