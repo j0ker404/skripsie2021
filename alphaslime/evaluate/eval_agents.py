@@ -10,7 +10,9 @@
 
 
 '''
+from collections import deque
 import gym
+import numpy as np
 from torch.functional import Tensor
 from alphaslime.agents.agent import Agent
 import time
@@ -164,7 +166,7 @@ class EvaluateGameSA:
                 time.sleep(self.delay)
         return total_reward
 
-    def evaluate(self, EPISODES, is_progress_bar=False):
+    def evaluate(self, EPISODES, is_progress_bar=False, running_avg_len=100):
         """Evaluate agent performance for given number of episodes
 
         Args:
@@ -173,8 +175,11 @@ class EvaluateGameSA:
         
         return:
             episodes_reward: (list), total reward per episode
+            avg_rewards_array: (list), running reward average per episode 
         """
         rewards = []
+        rewards_deque = deque(maxlen=running_avg_len)
+        avg_rewards_array = [] 
         ranger = range(EPISODES)
         if is_progress_bar:
             ranger = tqdm(ranger)
@@ -182,9 +187,16 @@ class EvaluateGameSA:
         # evaluate episodes
         for episode in ranger:
             episode_reward = self.evaluate_episode()
+            rewards_deque.append(episode_reward)
+            avg_score = np.mean(rewards_deque)
+            # append average reward at current epsiode
+            avg_rewards_array.append(avg_score)
+            # append total episode reward
             rewards.append(episode_reward)
+
         self.env.close()
-        return rewards
+
+        return rewards, avg_rewards_array
 
 
 
