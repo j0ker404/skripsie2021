@@ -146,6 +146,11 @@ class Agent:
     def get_action(self, state):
         '''
             Get next action give current state  
+
+            return:
+
+                action_index: (int), Index of action to execute that corresponds
+                                to an action in the Agent's Action table
         '''
         action = None
 
