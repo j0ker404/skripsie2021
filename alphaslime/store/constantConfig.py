@@ -11,11 +11,11 @@ class Constants(Config):
     Args:
         Config (Config): Base class
     """
-    def __init__(self) -> None:
+    def __init__(self, init_dict=None) -> None:
         '''
             Constructor
         '''
-        super().__init__()
+        super().__init__(init_dict)
 
     def save(self, path):
         """Save config data to disk using python
