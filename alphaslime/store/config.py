@@ -3,8 +3,11 @@ import pickle
 # TODO add a load from save file
 class Config:
 
-    def __init__(self) -> None:
+    def __init__(self, init_dict=None) -> None:
         self._config = {}
+
+        if init_dict is not None:
+            self.load_from_dict(init_dict)
 
     def load_from_dict(self, config_dict:dict):
         """Set Config instance by loading data
