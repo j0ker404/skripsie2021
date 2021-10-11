@@ -1,12 +1,22 @@
 from typing import Any
 import pickle
-
+# TODO add a load from save file
 class Config:
 
     def __init__(self) -> None:
         self._config = {}
 
-    def set_prop(self, name:str, data:Any) -> None:
+    def load_from_dict(self, config_dict:dict):
+        """Set Config instance by loading data
+            from a dictionary
+
+        Args:
+            config_dict (dict): Dictionary to load data from
+        """
+        for key, value in config_dict.items():
+            self.set(key) = value
+
+    def set(self, name:str, data:Any) -> None:
         """Set a configuration property.
             Note that this method also creates a new
             property
@@ -17,9 +27,10 @@ class Config:
         """
         self._config[name] = data
 
-    def get_prop(self, name:str) -> Any:
+    def get(self, name:str) -> Any:
         """Get the data assoicated with a property
 
+            Shallow copy is returned
 
 
         Args:
@@ -47,5 +58,8 @@ class Config:
         # path = self.BASE_PATH  + model_info + '_hyper' + '.pkl'
         # filenames.append(path)
         with open(path, 'wb') as f:
-            pickle.dump(self., f)
+            pickle.dump(self._config, f)
         
+    
+    def __str__(self) -> str:
+        return str(self._config)
