@@ -32,8 +32,6 @@ class TrainerSA(Trainer):
         self.n_actions = self.env.action_space.n
         self.len_obs_space = self.env.observation_space.shape[0]
 
-        # self.q_type = q_type
-        # self.agent = agent
 
         # create directory if not present
         if not os.path.exists(self.BASE_PATH):
@@ -58,8 +56,6 @@ class TrainerSA(Trainer):
         agent_type = training_config.get('agent_type') 
         agent = agent_type(self.CONSTANTS,agent_config)
         # train agent
-        # avg_rewards = agent.train(EPISODES, is_progress=is_progress, threshold=reward_threshold, is_threshold_stop=reward_is_threshold_stop)
-        # avg_rewards = agent.train(training_config)
         agent.train(training_config)
 
         # return self.save_data(avg_rewards, agent, train, config)
@@ -82,11 +78,7 @@ class TrainerSA(Trainer):
 
         '''
         filenames = []
-        # learning_rate = agent_config.get('lr')
-        # gamma = agent_config.get('gamma')
-        # avg_reward = agent.avg_rewards[-1]
 
-        # file_info = "gamma_{}_lr_rate_{}_reward_{}".format(str(gamma), str(learning_rate), str(avg_reward))
         file_info = fileNamer.gen_name(agent=agent, prefix=prefix)
 
         # save model
@@ -116,67 +108,3 @@ class TrainerSA(Trainer):
         self.CONSTANTS.save(path)
 
         return filenames
-
-
-    # def save_data(self, avg_rewards, agent:Agent, training_config:Config, agent_config:Config):
-    #     '''
-    #         Save training data to disk
-
-    #         return: filenames:list, list of saved filenames
-
-    #         TODO: There is an error pickling Wrappers of Env,
-    #             Currently just saving string version of env object
-    #     '''
-    #     filenames = []
-    #     learning_rate = agent.q_model.learning_rate
-    #     gamma = agent.gamma.item()
-    #     avg_reward = avg_rewards[-1]
-
-    #     model_info = "gamma_{}_lr_rate_{}_reward_{}".format(str(gamma), str(learning_rate), str(avg_reward))
-
-    #     path = self.BASE_PATH + model_info + '_model' + '.pt'
-    #     filenames.append(path)
-    #     # save model
-    #     agent.save_q_model(path)
-
-    #     # save training data
-    #     training_data = {
-    #         'avg_rewards': avg_rewards,
-    #         'rewards': agent.rewards,
-    #         'epsilon': agent.epsilon_list,
-    #         'losses': agent.loss_list
-    #     }
-    #     path = self.BASE_PATH  + model_info + '_data' + '.pkl'
-    #     filenames.append(path)
-    #     with open(path, 'wb') as f:
-    #         pickle.dump(training_data, f)
-
-
-    #     # save hyperparams
-    #     path = self.BASE_PATH  + model_info + '_hyper' + '.pkl'
-    #     filenames.append(path)
-    #     with open(path, 'wb') as f:
-    #         pickle.dump(hyperparams, f)
-
-    #     #NOTE that we convert env obj to string in place for pickling
-
-    #     # save agent config
-    #     path = self.BASE_PATH  + model_info + '_agent_cfg' + '.pkl'
-    #     filenames.append(path)
-    #     # print(agent_config)
-    #     # agent_config.pop('env')
-    #     agent_config['env'] = str(agent_config['env'])
-    #     # print(agent_config)
-    #     with open(path, 'wb') as f:
-    #         pickle.dump(agent_config, f)
-
-    #     # # save CONSTANTS
-    #     path = self.BASE_PATH  + model_info + '_CONSTANTS' + '.pkl'
-    #     filenames.append(path)
-    #     # # self.CONSTANTS.pop('env')
-    #     self.CONSTANTS['env'] = str(self.CONSTANTS['env'])
-    #     with open(path, 'wb') as f:
-    #         pickle.dump(self.CONSTANTS, f)
-
-    #     return filenames
-
