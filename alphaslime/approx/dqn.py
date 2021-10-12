@@ -9,7 +9,7 @@ class DQN(nn.Module):
         nn ([torch.nn]): NN base class
     """
 
-    def __init__(self, lr, device, layer_sizes):
+    def __init__(self, lr, layer_sizes):
         super().__init__()
         self.layer_sizes = layer_sizes
         self.input_size = self.layer_sizes[0]
@@ -25,7 +25,7 @@ class DQN(nn.Module):
             nn.Linear(self.hidden_layer_size, self.output_size)
         )
         self.learning_rate = lr
-        self.device = device
+        # self.device = device
 
     def forward(self, x):
         logits = self.seq(x)
@@ -41,7 +41,7 @@ class DQNv2(nn.Module):
         nn ([torch.nn]): NN base class
     """
 
-    def __init__(self, lr, device, layer_sizes):
+    def __init__(self, lr, layer_sizes):
         super().__init__()
         self.layer_sizes = layer_sizes
         self.input_size = self.layer_sizes[0]
@@ -53,7 +53,7 @@ class DQNv2(nn.Module):
             nn.Linear(self.hidden_layer_size, self.output_size)
         )
         self.learning_rate = lr
-        self.device = device
+        # self.device = device
 
     def forward(self, x):
         logits = self.seq(x)
@@ -69,7 +69,7 @@ class DQNv3(nn.Module):
         nn ([torch.nn]): NN base class
     """
 
-    def __init__(self, lr, device, layer_sizes):
+    def __init__(self, lr, layer_sizes):
         super().__init__()
         self.layer_sizes = layer_sizes
         self.input_size = self.layer_sizes[0]
@@ -83,7 +83,7 @@ class DQNv3(nn.Module):
             nn.Linear(self.hidden_layer_size, self.output_size)
         )
         self.learning_rate = lr
-        self.device = device
+        # self.device = device
 
     def forward(self, x):
         logits = self.seq(x)
