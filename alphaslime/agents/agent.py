@@ -1,26 +1,19 @@
-
+import pickle
+from alphaslime.store.config import Config
 class Agent:
     '''
         Base Agent class implementation
 
     '''
     # def __init__(self, config:dict, action_table=None, max_score=None, t_max=3000, episode_printer=100, env=None) -> None:
-    def __init__(self, config:dict) -> None:
+    def __init__(self, CONSTANTS:Config) -> None:
         '''
-            action_table=None, max_score=None, t_max=3000, episode_printer=100, env=None
-            config: key-values
+            CONSTANTS: key-values
+            CONSTANTS is a Config instance that contains the constant information
 
             - action_table: list of actions
                 - action is a boolean array
-                - example, action_1 = [0,1,0]
-
-            - max_score: float, max score that can be achieved for environment episode
-
-            - t_max: int, max number of time steps per episode
-
-            - episode_printer: int, used to determine the rate at which episode data is
-                                logged(printed to screen)
-            
+                - example, action_1 = [0,1,0]            
             - env: gym environment
         
         '''
@@ -30,38 +23,10 @@ class Agent:
             actions[1] -> backward
             actions[2] -> jump
         '''
-        # self.T_MAX =  t_max
-        # self.MAX_SCORE = max_score
-        # self.episode_printer = episode_printer
-        # # configure environment
-        # self.env = env
-
-        # actions for slimeball
-        # action_table = [[0, 0, 0], # NOOP
-        #                 [1, 0, 0], # LEFT (forward)
-        #                 [1, 0, 1], # UPLEFT (forward jump)
-        #                 [0, 0, 1], # UP (jump)
-        #                 [0, 1, 1], # UPRIGHT (backward jump)
-        #                 [0, 1, 0]] # RIGHT (backward)
-
-        # if action_table is None:
-        #     # configure to use the normal thing
-        #     self.action_table = [[0, 0, 0], # NOOP
-        #                         [1, 0, 0], # LEFT (forward)
-        #                         [1, 0, 1], # UPLEFT (forward jump)
-        #                         [0, 0, 1], # UP (jump)
-        #                         [0, 1, 1], # UPRIGHT (backward jump)
-        #                         [0, 1, 0]] # RIGHT (backward)
-        # else:
-        #     self.action_table = action_table
-
-
-        # self.T_MAX =  config['t_max']
-        # self.MAX_SCORE = config['max_score']
-        # self.episode_printer = config['episode_printer']
+    
         # configure environment
-        self.env = config['env']
-        self.action_table = config['action_table']
+        self.env = CONSTANTS.get('env')
+        self.action_table = CONSTANTS.get('action_table')
         self.max_actions = len(self.action_table)
 
 
@@ -155,3 +120,32 @@ class Agent:
         action = None
 
         return action
+
+    def get_training_data(self) -> dict:
+        """Return current recorded training data
+            
+            Data in form:
+            training_data = {
+                'train_1': train_1_value,
+            }
+
+        Returns:
+            dict: Returned training data
+        """
+        pass
+
+
+    def save_training_data(self, path):
+        """Save the current recorded training data to disk
+
+            Python Pickling is used to save the data that is stored in 
+            a dictionary
+
+            Data stored in a dictionary:
+
+        Args:
+            path (str): Path to save the data
+        """
+        training_data = self.get_training_data()
+        with open(path, 'wb') as f:
+            pickle.dump(training_data, f)
