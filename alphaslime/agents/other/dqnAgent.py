@@ -1,3 +1,5 @@
+import pickle
+from typing import Dict
 import torch
 from torch import nn
 import random
@@ -8,6 +10,8 @@ from tqdm import tqdm
 from alphaslime.approx.dqn import DQN
 from alphaslime.agents.agent import Agent
 from alphaslime.epsilon.epsilon import Epsilon 
+from alphaslime.store.config import Config
+from alphaslime.store.constantConfig import Constants
 
 class DQNAgent(Agent):
     """DQNAgent
@@ -15,31 +19,45 @@ class DQNAgent(Agent):
     A DQN agent implementation
     """
 
-    def __init__(self, config:dict, seed=None) -> None:
-        super().__init__(config)
+    # def __init__(self, config:dict, seed=None) -> None:
+    def __init__(self, const:Constants, config:Config, seed=None) -> None:
+        super().__init__(const)
         if seed:
             torch.manual_seed(seed)
 
-        self.q_model = config['q_hat']
-        self.env = config['env']
-        self.epsilon = config['epsilon']
-        self.gamma = torch.tensor(config['gamma']).float()
-        self.BATCH_SIZE = config['batch_size']
-        self.EXP_MEMORY_SIZE = config['exp_mem_size']
-        self.lr = config['lr']
-        self.TARGET_UPDATE = config['TARGET_UPDATE']
-        self.epsilon_decay:Epsilon = config['epsilon_decay']
+        self.epsilon = config.get('epsilon')
+        self.gamma = torch.tensor(config.get('gamma')).float()
+        self.BATCH_SIZE = config.get('batch_size')
+        self.EXP_MEMORY_SIZE = config.get('exp_mem_size')
+        self.lr = config.get('lr')
+        self.TARGET_UPDATE = config.get('TARGET_UPDATE')
+        self.epsilon_decay:Epsilon = config.get('epsilon_decay')
+        self.q_type = config.get('q_type')
+        # self.q_model = config.get('q_hat')
+
+        # load model properities
+        self.device = config.get('device')
+        self.layer_sizes = config.get('q_layer_sizes')
+
+        # --------------------------------------
+        # self.q_model = config['q_hat']
+        # self.env = config['env']
+        # self.epsilon = config['epsilon']
+        # self.gamma = torch.tensor(config['gamma']).float()
+        # self.BATCH_SIZE = config['batch_size']
+        # self.EXP_MEMORY_SIZE = config['exp_mem_size']
+        # self.lr = config['lr']
+        # self.TARGET_UPDATE = config['TARGET_UPDATE']
+        # self.epsilon_decay:Epsilon = config['epsilon_decay']
+        # --------------------------------------
 
         # instantsiat target model
-        self.q_type = config['q_type']
+        # self.q_type = config['q_type']
         # consider using a copy.deepcopy to create target net
-        self.q_target = self.q_type(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes, device=self.q_model.device)
+        self.q_model = self.q_type(lr=self.lr, layer_sizes=self.layer_sizes).to(self.device)
+        self.q_target = self.q_type(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes).to(self.device)
         self.update_q_target_no_eval()
-        # try:
-        #     self.q_type = config['q_type']
-        #     self.q_target = self.q_type(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes, device=self.q_model.device).to()
-        # except:
-        #     self.q_target = DQN(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes, device=self.q_model.device).to()
+
         self.n_actions = self.env.action_space.n
 
         # create replay buffer
@@ -52,6 +70,52 @@ class DQNAgent(Agent):
         self.rewards = []
         self.loss_list = []
         self.epsilon_list = []
+        self.avg_rewards = [] 
+
+    def init_q_target(self):
+        """Init q_target
+        """
+        self.q_target = self.q_type(self.q_model.learning_rate, layer_sizes=self.q_model.layer_sizes).to(self.device)
+        self.update_q_target_no_eval()
+
+    def clear_training_data(self):
+        """Clear the training data
+
+            Training data:
+                - rewards
+                - loss_list
+                - epsilon_list
+                - average scores
+        """
+        self.rewards = []
+        self.loss_list = []
+        self.epsilon_list = []
+        self.avg_rewards = [] 
+    
+
+    def get_training_data(self) -> dict:
+        """Return current recorded training data
+            
+            Data in form:
+            training_data = {
+                'avg_rewards': self.avg_rewards,
+                'rewards': self.rewards,
+                'epsilon': self.epsilon_list,
+                'losses': self.loss_list
+            }
+
+        Returns:
+            dict: Returned training data
+        """
+        training_data = {
+            'avg_rewards': self.avg_rewards,
+            'rewards': self.rewards,
+            'epsilon': self.epsilon_list,
+            'losses': self.loss_list
+        }
+
+        return training_data
+
 
     def clear_replay_memory(self):
         """[summary]
@@ -84,7 +148,8 @@ class DQNAgent(Agent):
 
         return q_max
     
-    def train(self, EPISODES, is_progress=False, threshold=195, is_threshold_stop=True, running_avg_len=100):
+    # def train(self, train_config:Config, EPISODES, is_progress=False, threshold=195, is_threshold_stop=True, running_avg_len=100):
+    def train(self, train_config:Config):
         """Train agent
 
         Args:
@@ -104,6 +169,15 @@ class DQNAgent(Agent):
 
             is_progess: (total)
         '''
+
+        # load configs
+        EPISODES =  train_config.get('EPISODES')
+        is_progress =  train_config.get('is_progress')
+        threshold =  train_config.get('threshold')
+        is_threshold_stop =  train_config.get('is_threshold_stop')
+        running_avg_len =  train_config.get('running_avg_len')
+        
+
         # self.init_replay_memory()
         # self.train_step_count = 128
         ranger = range(EPISODES)
@@ -111,7 +185,6 @@ class DQNAgent(Agent):
             ranger = tqdm(ranger)
 
         rewards_deque = deque(maxlen=running_avg_len)
-        avg_scores_array = [] 
         is_solved = False   
         for episode in ranger:
             # update epsilon value
@@ -132,8 +205,8 @@ class DQNAgent(Agent):
             reward = episode_data[0]
             rewards_deque.append(reward)
             
-            avg_score = np.mean(rewards_deque)
-            avg_scores_array.append(avg_score)
+            avg_reward= np.mean(rewards_deque)
+            self.avg_rewards.append(avg_reward)
             
 
             
@@ -146,7 +219,7 @@ class DQNAgent(Agent):
                         is_solved = not is_solved
                     if is_threshold_stop:
                         break
-        return avg_scores_array
+        # return avg_scores_array
 
    
 
@@ -304,7 +377,7 @@ class DQNAgent(Agent):
         return action
 
 
-    def save_q_model(self, PATH):
+    def save_model(self, PATH):
         """Save the current q_model
 
         PATH: Path to save model
@@ -312,7 +385,7 @@ class DQNAgent(Agent):
         torch.save(self.q_model.state_dict(), PATH)
 
 
-    def load_q_model(self, PATH):
+    def load_model(self, PATH):
         """Load Q_model for inference
 
         Args:
@@ -320,3 +393,14 @@ class DQNAgent(Agent):
         """
         self.q_model.load_state_dict(torch.load(PATH))
         self.q_model.eval()
+
+
+    def load_model_no_eval(self, PATH):
+        """Load Q_model 
+        
+        This method does not call the torch eval()
+
+        Args:
+            PATH ([str]): Path for model to be loaded
+        """
+        self.q_model.load_state_dict(torch.load(PATH))
