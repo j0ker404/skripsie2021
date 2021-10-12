@@ -1,8 +1,10 @@
+from alphaslime.store.constantConfig import Constants
+
 class Trainer:
     """ Base class for training an agent in
         an enviroment
     """
-    def __init__(self, CONSTANTS:dict) -> None:
+    def __init__(self, CONSTANTS:Constants) -> None:
         self.CONSTANTS = CONSTANTS
 
     def train(self, hyperparams:dict):
