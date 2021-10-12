@@ -6,6 +6,7 @@ other/cartpole/algs/qlearn/dqn_models/
 other/cartpole/algs/qlearn/dqn_rewards
 
 other/cartpole/algs/qlearn/tdata
+other/cartpole/algs/qlearn/tdata2
 train/qlearn/hyper
 
 other/cartpole/algs/qlearn/dqnv2_models
