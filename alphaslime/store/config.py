@@ -5,11 +5,10 @@ class Config:
 
     def __init__(self, init_dict=None) -> None:
         self._config = {}
-
         if init_dict is not None:
-            self.load_from_dict(init_dict)
+            self.__load_from_dict(init_dict)
 
-    def load_from_dict(self, config_dict:dict):
+    def __load_from_dict(self, config_dict:dict):
         """Set Config instance by loading data
             from a dictionary
 
@@ -17,7 +16,7 @@ class Config:
             config_dict (dict): Dictionary to load data from
         """
         for key, value in config_dict.items():
-            self.set(key) = value
+            self.set(key, value)
 
     def set(self, name:str, data:Any) -> None:
         """Set a configuration property.
@@ -60,9 +59,19 @@ class Config:
         """
         # path = self.BASE_PATH  + model_info + '_hyper' + '.pkl'
         # filenames.append(path)
+        # print('sf')
         with open(path, 'wb') as f:
             pickle.dump(self._config, f)
         
-    
+    def load(self, dict_data):
+        """Create new class instance with dictionary
+
+        Args:
+            cfg (Config): Config instance initialised with values
+        """
+        cfg = Config(dict_data)
+        return cfg
+
+
     def __str__(self) -> str:
         return str(self._config)
