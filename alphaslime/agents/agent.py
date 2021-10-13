@@ -28,6 +28,8 @@ class Agent:
         self.env = CONSTANTS.get('env')
         self.action_table = CONSTANTS.get('action_table')
         self.max_actions = len(self.action_table)
+        # TODO: replace max actions with n_actions
+        self.n_actions = self.max_actions
 
 
     def forward(self, obs, action):
