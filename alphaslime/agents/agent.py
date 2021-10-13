@@ -110,9 +110,9 @@ class Agent:
         '''
         pass
     
-    def get_action(self, state):
+    def get_action(self, observation):
         '''
-            Get next action give current state  
+            Get next action give current observation  
 
             return:
 
