@@ -274,7 +274,7 @@ class PPOAgent(Agent):
                         is_solved = not is_solved
                     if is_threshold_stop:
                         break
-            if episode % 5 == 0:
+            if episode % 10 == 0:
                 print('episode', episode, 'score %.1f' % score, 'avg score %.1f' % avg_reward,
                         'time_steps', n_steps, 'learning_steps', learn_iters)
 
