@@ -47,6 +47,7 @@ class Agent:
 
             - obs_next: next state observation after action executed
 
+            TODO: remove action next
             - action_next: next action to execute bases on obs_next 
 
         '''
