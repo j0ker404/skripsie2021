@@ -84,6 +84,24 @@ class ActorNetwork(nn.Module):
 
     def load_checkpoint(self):
         self.load_state_dict(T.load(self.checkpoint_file))
+    
+    def save_model(self, path):
+        """Save NN model to disk
+
+        Args:
+            path (str): file path to save file
+                        in the form of: $PATH$.pt
+        """
+        T.save(self.state_dict(), path)
+
+    def load_model(self, path):
+        """Load NN model from disk
+
+        Args:
+            path (str): file path to load file
+                        in the form of: $PATH$.pt
+        """
+        self.load_state_dict(T.load(path))
 
 class CriticNetwork(nn.Module):
     def __init__(self, input_dims, alpha, fc1_dims=256, fc2_dims=256,
@@ -114,7 +132,24 @@ class CriticNetwork(nn.Module):
     def load_checkpoint(self):
         self.load_state_dict(T.load(self.checkpoint_file))
 
+    
+    def save_model(self, path):
+        """Save NN model to disk
 
+        Args:
+            path (str): file path to save file
+                        in the form of: $PATH$.pt
+        """
+        T.save(self.state_dict(), path)
+
+    def load_model(self, path):
+        """Load NN model from disk
+
+        Args:
+            path (str): file path to load file
+                        in the form of: $PATH$.pt
+        """
+        self.load_state_dict(T.load(path))
 
 class PPOAgent(Agent):
 
@@ -123,7 +158,7 @@ class PPOAgent(Agent):
 
         # T.manual_seed(256)
         input_dims = config.get('input_dims')
-        alpha = config.get('alpha')
+        self.alpha = config.get('alpha')
         self.batch_size = config.get('batch_size')
 
         self.gamma = config.get('gamma')
@@ -135,8 +170,8 @@ class PPOAgent(Agent):
         self.verbose = config.get('verbose') 
 
         # create actor and critic networks
-        self.actor = ActorNetwork(self.n_actions, input_dims, alpha, fc1_dims=64, fc2_dims=64)
-        self.critic = CriticNetwork(input_dims, alpha, fc1_dims=64, fc2_dims=64)
+        self.actor = ActorNetwork(self.n_actions, input_dims, self.alpha, fc1_dims=64, fc2_dims=64)
+        self.critic = CriticNetwork(input_dims, self.alpha, fc1_dims=64, fc2_dims=64)
         # self.actor = ActorNetwork(self.n_actions, input_dims, alpha)
         # self.critic = CriticNetwork(input_dims, alpha)
         # create PPO memory
@@ -156,13 +191,20 @@ class PPOAgent(Agent):
     def remember(self, state, action, probs, vals, reward, done):
         self.memory.store_memory(state, action, probs, vals, reward, done)
 
-    def save_model(self):
+    def save_model(self, base_path):
         """Save actor and critic models
+        base_path (str): Base file path name
+                            in the form of 
+                            $PATH$/name_model
         """
         if self.verbose:
             print('... saving models ...')
-        self.actor.save_checkpoint()
-        self.critic.save_checkpoint()
+        # self.actor.save_checkpoint()
+        # self.critic.save_checkpoint()
+        actor_path = base_path+'_actor.pt'
+        critic_path = base_path+'_critic.pt'
+        self.actor.save_model(actor_path)
+        self.critic.save_model(critic_path)
 
     def load_model(self):
         """Load actor and critic models
@@ -267,6 +309,7 @@ class PPOAgent(Agent):
                 self.save_model()
 
             if len(rewards_deque) == rewards_deque.maxlen:
+                # determine solved environment
                 if np.mean(rewards_deque) >= threshold:
                     if not is_solved: 
                         print('\n Environment solved in {:d} episodes!\tAverage Score: {:.2f}'. \
@@ -274,7 +317,7 @@ class PPOAgent(Agent):
                         is_solved = not is_solved
                     if is_threshold_stop:
                         break
-            if episode % 10 == 0:
+            if episode % 10 == 0 and self.verbose:
                 print('episode', episode, 'score %.1f' % score, 'avg score %.1f' % avg_reward,
                         'time_steps', n_steps, 'learning_steps', learn_iters)
 
