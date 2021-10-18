@@ -152,3 +152,20 @@ class Agent:
         training_data = self.get_training_data()
         with open(path, 'wb') as f:
             pickle.dump(training_data, f)
+
+
+    def save_model(self, path):
+        """Save model
+
+        Args:
+            path (str): Path to save model
+        """
+        pass
+
+    def load_model(self, path):
+        """Load model
+
+        Args:
+            path (str): Path to load model from
+        """
+        pass
