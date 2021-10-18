@@ -24,5 +24,5 @@ class QLearnFile(FileName):
             learning_rate = learning_rate.item()
 
         avg_reward = agent.avg_rewards[-1]
-        file_info = "gamma_{}_lr_rate_{}_reward_{}".format(str(gamma), str(learning_rate), str(avg_reward)) 
+        file_info = "gamma_{:.5}_lr_rate_{:.8}_reward_{:.5}".format(str(gamma), str(learning_rate), str(avg_reward)) 
         return file_info

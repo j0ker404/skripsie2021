@@ -24,5 +24,5 @@ class PGLearnFile(FileName):
             alpha = alpha.item()
 
         avg_reward = agent.avg_rewards[-1]
-        file_info = "gamma_{}_alpha_{}_reward_{}".format(str(gamma), str(alpha), str(avg_reward)) 
+        file_info = "gamma_{:.5}_alpha_{:.8}_reward_{:.5}".format(str(gamma), str(alpha), str(avg_reward)) 
         return file_info
