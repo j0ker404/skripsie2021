@@ -11,6 +11,7 @@
 
 '''
 from collections import deque
+from typing import Iterable
 import gym
 import numpy as np
 from torch.functional import Tensor
@@ -119,6 +120,7 @@ class EvaluateGameSA:
         self.base_dir_path = base_dir_path
         self.env = env
         self.delay = time_delay
+
     
     def evaluate_episode(self):
         '''
@@ -146,8 +148,18 @@ class EvaluateGameSA:
         t = 0
         # start episode
         while not done:
+            action_data = self.agent.get_action(obs1)
+            try:
+                # Assume that action data is a
+                # type of list
+                # assume that action_index is the 
+                # first element
+                action_index, *other_action_data = action_data
+            except:
+                # action data is a single element
+                # thus action data is the action index
+                action_index = action_data
 
-            action_index = self.agent.get_action(obs1)
             if type(action_index) == Tensor:
                 action = self.agent.action_table[action_index.item()]
             else:
