@@ -1,5 +1,5 @@
-    """Utility ploting functions
-    """
+"""Utility ploting functions
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt
