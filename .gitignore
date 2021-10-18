@@ -10,3 +10,7 @@ other/cartpole/algs/qlearn/tdata2
 train/qlearn/hyper
 
 other/cartpole/algs/qlearn/dqnv2_models
+
+other/cartpole/algs/policygrad/PPO_data
+other/cartpole/algs/policygrad/tmp
+other/cartpole/algs/policygrad/plots
