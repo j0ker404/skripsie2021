@@ -48,6 +48,8 @@ class TrainerSA(Trainer):
         Args:
             hyperparams (dict): hyper parameters for training agent
 
+            training_config: Contains at least the entry for the 
+                            'agent_type'
 
         return: filenames:list, list of saved file
         """
@@ -82,7 +84,7 @@ class TrainerSA(Trainer):
         file_info = fileNamer.gen_name(agent=agent, prefix=prefix)
 
         # save model
-        path = self.BASE_PATH + file_info + '_model' + '.pt'
+        path = self.BASE_PATH + file_info + '_model'
         filenames.append(path)
         agent.save_model(path)
 
