@@ -9,6 +9,7 @@ PACKAGE_PARENT = '../../../'
 sys.path.append(PACKAGE_PARENT)
 
 import gym
+import slimevolleygym
 from alphaslime.agents.RL.policygrad.torch.ppo import PPOAgent
 from alphaslime.store.constantConfig import Constants
 from alphaslime.store.config import Config
