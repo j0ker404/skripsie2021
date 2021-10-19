@@ -55,17 +55,21 @@ class PPOMemory:
         self.vals = []
 
 class ActorNetwork(nn.Module):
-    def __init__(self, n_actions, input_dims, alpha,
-            fc1_dims=256, fc2_dims=256, chkpt_dir='tmp/ppo'):
+    def __init__(self, n_actions, layer_sizes, alpha):
+    # def __init__(self, n_actions, input_dims, alpha,
+    #         fc1_dims=256, fc2_dims=256, chkpt_dir='tmp/ppo'):
         super(ActorNetwork, self).__init__()
-
-        self.checkpoint_file = os.path.join(chkpt_dir, 'actor_torch_ppo')
+        input_dim = layer_sizes[0]
+        layer1_dim = layer_sizes[1]
+        layer2_dim = layer_sizes[2]
+        output_dim = n_actions
+        # self.checkpoint_file = os.path.join(chkpt_dir, 'actor_torch_ppo')
         self.actor = nn.Sequential(
-                nn.Linear(*input_dims, fc1_dims),
+                nn.Linear(input_dim, layer1_dim),
                 nn.ReLU(),
-                nn.Linear(fc1_dims, fc2_dims),
+                nn.Linear(layer1_dim, layer2_dim),
                 nn.ReLU(),
-                nn.Linear(fc2_dims, n_actions),
+                nn.Linear(layer2_dim, output_dim),
                 nn.Softmax(dim=-1)
         )
 
@@ -79,11 +83,11 @@ class ActorNetwork(nn.Module):
         
         return dist
 
-    def save_checkpoint(self):
-        T.save(self.state_dict(), self.checkpoint_file)
+    # def save_checkpoint(self):
+    #     T.save(self.state_dict(), self.checkpoint_file)
 
-    def load_checkpoint(self):
-        self.load_state_dict(T.load(self.checkpoint_file))
+    # def load_checkpoint(self):
+    #     self.load_state_dict(T.load(self.checkpoint_file))
     
     def save_model(self, path):
         """Save NN model to disk
@@ -104,17 +108,21 @@ class ActorNetwork(nn.Module):
         self.load_state_dict(T.load(path))
 
 class CriticNetwork(nn.Module):
-    def __init__(self, input_dims, alpha, fc1_dims=256, fc2_dims=256,
-            chkpt_dir='tmp/ppo'):
+    def __init__(self, layer_sizes, alpha):
+    # def __init__(self, input_dims, alpha, fc1_dims=256, fc2_dims=256,
+    #         chkpt_dir='tmp/ppo'):
         super(CriticNetwork, self).__init__()
-
-        self.checkpoint_file = os.path.join(chkpt_dir, 'critic_torch_ppo')
+        input_dim = layer_sizes[0]
+        layer1_dim = layer_sizes[1]
+        layer2_dim = layer_sizes[2]
+        output_dim = 1
+        # self.checkpoint_file = os.path.join(chkpt_dir, 'critic_torch_ppo')
         self.critic = nn.Sequential(
-                nn.Linear(*input_dims, fc1_dims),
+                nn.Linear(input_dim, layer1_dim),
                 nn.ReLU(),
-                nn.Linear(fc1_dims, fc2_dims),
+                nn.Linear(layer1_dim, layer2_dim),
                 nn.ReLU(),
-                nn.Linear(fc2_dims, 1)
+                nn.Linear(layer2_dim, output_dim)
         )
 
         self.optimizer = optim.Adam(self.parameters(), lr=alpha)
@@ -126,11 +134,11 @@ class CriticNetwork(nn.Module):
 
         return value
 
-    def save_checkpoint(self):
-        T.save(self.state_dict(), self.checkpoint_file)
+    # def save_checkpoint(self):
+    #     T.save(self.state_dict(), self.checkpoint_file)
 
-    def load_checkpoint(self):
-        self.load_state_dict(T.load(self.checkpoint_file))
+    # def load_checkpoint(self):
+    #     self.load_state_dict(T.load(self.checkpoint_file))
 
     
     def save_model(self, path):
@@ -169,9 +177,18 @@ class PPOAgent(Agent):
         self.STEP_UPDATE = config.get('STEP_UPDATE') 
         self.verbose = config.get('verbose') 
 
+        self.MODEL_CHECKPOINT_PATH = config.get('model_chkpt_path')
+        # create directory if not present
+        if not os.path.exists(self.MODEL_CHECKPOINT_PATH):
+            os.makedirs(self.MODEL_CHECKPOINT_PATH)
+
+        act_layer_sizes = config.get('actor_dims')
+        crit_layer_sizes = config.get('critic_dims')
         # create actor and critic networks
-        self.actor = ActorNetwork(self.n_actions, input_dims, self.alpha, fc1_dims=64, fc2_dims=64)
-        self.critic = CriticNetwork(input_dims, self.alpha, fc1_dims=64, fc2_dims=64)
+        self.actor = ActorNetwork(self.n_actions, act_layer_sizes, self.alpha)
+        self.critic = CriticNetwork(crit_layer_sizes, self.alpha)
+        # self.actor = ActorNetwork(self.n_actions, input_dims, self.alpha, fc1_dims=64, fc2_dims=64)
+        # self.critic = CriticNetwork(input_dims, self.alpha, fc1_dims=64, fc2_dims=64)
         # self.actor = ActorNetwork(self.n_actions, input_dims, alpha)
         # self.critic = CriticNetwork(input_dims, alpha)
         # create PPO memory
@@ -206,13 +223,19 @@ class PPOAgent(Agent):
         self.actor.save_model(actor_path)
         self.critic.save_model(critic_path)
 
-    def load_model(self):
+    def load_model(self, paths:list):
         """Load actor and critic models
+
+            paths (list): Path for actor and critic
+                        actor_path = paths[0]
+                        critic_path = paths[1]
         """
         if self.verbose:
             print('... loading models ...')
-        self.actor.load_checkpoint()
-        self.critic.load_checkpoint()
+        # self.actor.load_checkpoint()
+        # self.critic.load_checkpoint()
+        self.actor.load_model(paths[0])
+        self.critic.load_model(paths[1])
 
     def clear_training_data(self):
         """Clear the training data
@@ -306,7 +329,8 @@ class PPOAgent(Agent):
 
             if avg_reward > self.best_score:
                 self.best_score = avg_reward
-                self.save_model()
+                path = self.MODEL_CHECKPOINT_PATH + 'avg_rew_' +str(self.best_score)
+                self.save_model(path)
 
             if len(rewards_deque) == rewards_deque.maxlen:
                 # determine solved environment
