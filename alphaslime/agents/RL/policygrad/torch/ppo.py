@@ -82,12 +82,6 @@ class ActorNetwork(nn.Module):
         dist = Categorical(dist)
         
         return dist
-
-    # def save_checkpoint(self):
-    #     T.save(self.state_dict(), self.checkpoint_file)
-
-    # def load_checkpoint(self):
-    #     self.load_state_dict(T.load(self.checkpoint_file))
     
     def save_model(self, path):
         """Save NN model to disk
@@ -133,14 +127,7 @@ class CriticNetwork(nn.Module):
         value = self.critic(state)
 
         return value
-
-    # def save_checkpoint(self):
-    #     T.save(self.state_dict(), self.checkpoint_file)
-
-    # def load_checkpoint(self):
-    #     self.load_state_dict(T.load(self.checkpoint_file))
-
-    
+   
     def save_model(self, path):
         """Save NN model to disk
 
@@ -271,7 +258,6 @@ class PPOAgent(Agent):
 
         return training_data
 
-
     def train(self, train_config:Config):
         """Train agent
 
@@ -292,190 +278,74 @@ class PPOAgent(Agent):
         rewards_deque = deque(maxlen=running_avg_len)
         
         self.learn_iters = 0
-        self.avg_reward = 0
+        # self.avg_reward = 0
         self.n_steps = 0
         is_solved = False
 
-        learn_iters = 0
-        avg_score = 0
-        n_steps = 0
         for episode in ranger:
-
-            observation = self.env.reset()
-            done = False
-            score = 0
-
-            while not done:
-                act_index, prob, val = self.get_action(observation)
-                action = self.action_table[act_index]
-                observation_, reward, done, info = self.env.step(action)
-                n_steps += 1
-                score += reward
-                self.remember(observation, act_index, prob, val, reward, done)
-                if n_steps % self.STEP_UPDATE == 0:
-                    # self.learn()
-                    self.optimize_model()
-                    learn_iters += 1
-                observation = observation_
-
-
-            self.rewards.append(score)
-
-            reward = score
-            rewards_deque.append(reward)
             
+            # train an episode
+            t, score = self.episode_train()
+
+            # append episode rewards to training data
+            self.rewards.append(score)
+            
+            # determine running mean
+            rewards_deque.append(score)
             avg_reward = np.mean(rewards_deque)
+            # append mean to training data 
             self.avg_rewards.append(avg_reward)
 
             if avg_reward > self.best_score:
                 self.best_score = avg_reward
-                path = self.MODEL_CHECKPOINT_PATH + 'avg_rew_' +str(self.best_score)
+                path = self.MODEL_CHECKPOINT_PATH + 'avg_rew_' + str(self.best_score)
                 self.save_model(path)
 
             if len(rewards_deque) == rewards_deque.maxlen:
                 # determine solved environment
-                if np.mean(rewards_deque) >= threshold:
+                if avg_reward >= threshold:
                     if not is_solved: 
                         print('\n Environment solved in {:d} episodes!\tAverage Score: {:.2f}'. \
-                            format(episode, np.mean(rewards_deque)))
+                            format(episode, avg_reward))
                         is_solved = not is_solved
                     if is_threshold_stop:
                         break
             if episode % 10 == 0 and self.verbose:
                 print('episode', episode, 'score %.1f' % score, 'avg score %.1f' % avg_reward,
-                        'time_steps', n_steps, 'learning_steps', learn_iters)
-
-    # def train(self, train_config:Config):
-    #     """Train agent
-
-    #     Args:
-    #         train_config (Config): Training configs
-    #     """
-    #     # load configs
-    #     EPISODES =  train_config.get('EPISODES')
-    #     is_progress =  train_config.get('is_progress')
-    #     threshold =  train_config.get('threshold')
-    #     is_threshold_stop =  train_config.get('is_threshold_stop')
-    #     running_avg_len =  train_config.get('running_avg_len')
-
-    #     ranger = range(EPISODES)
-    #     if is_progress:
-    #         ranger = tqdm(ranger)
-
-    #     rewards_deque = deque(maxlen=running_avg_len)
-        
-    #     self.learn_iters = 0
-    #     self.avg_reward = 0
-    #     self.n_steps = 0
-    #     is_solved = False
-    #     for episode in ranger:
-    #         t, episode_data = self.episode_train()
-
-    #         self.rewards.append(episode_data[0])
-    #         self.loss_list.append(episode_data[1])
-
-    #         reward = episode_data[0]
-    #         rewards_deque.append(reward)
-            
-    #         avg_reward = np.mean(rewards_deque)
-    #         self.avg_rewards.append(avg_reward)
-
-    #         if avg_reward > self.best_score:
-    #             self.best_score = avg_reward
-    #             self.save_model()
-
-    #         if len(rewards_deque) == rewards_deque.maxlen:
-    #             if np.mean(rewards_deque) >= threshold:
-    #                 if not is_solved: 
-    #                     print('\n Environment solved in {:d} episodes!\tAverage Score: {:.2f}'. \
-    #                         format(episode, np.mean(rewards_deque)))
-    #                     is_solved = not is_solved
-    #                 if is_threshold_stop:
-    #                     break
-
-    #         print('episode', episode, 'score %.1f' % reward, 'avg score %.1f' % avg_reward,
-    #         'time_steps', self.n_steps, 'learning_steps', self.learn_iters)
+                        'time_steps', self.n_steps, 'learning_steps', self.learn_iters)
 
 
     def episode_train(self):
-        '''
-            Train one episode
-        '''
+        observation = self.env.reset()
         done = False
-        obs = self.env.reset()
-        rew = 0
-        self.batch_size_info = 3
-        losses = T.zeros(size=(self.n_epochs, self.batch_size, self.batch_size_info), dtype=T.float32)
-
-
-        # data: [total reward for episode , total loss for]
+        score = 0.0
         t = 0
-        act, prob, val = self.get_action(obs)
-        action = self.action_table[act]
         while not done:
-
-            # perform one time step action
-            done, reward, obs_next, other_data =  self.forward(obs, [action, prob, val])
+            # make one step move
+            act_index, prob, val = self.get_action(observation)
+            action = self.action_table[act_index]
+            observation_next, reward, done, info = self.env.step(action)
             
-            # get next action info
-            act_next, prob_next, val_next = self.get_action(obs_next)
-            action_next = self.action_table[act_next]
-            
-            # update next observation
-            obs = obs_next
-            # update next action
-            action = action_next
-            prob = prob_next
-            val = val_next
-
-            # update reward and loss data
-            rew += reward
-            losses += other_data['loss']
-        
             # increment time step
             t += 1
 
-        return t, [rew, losses]
+            # update total number of steps taken during training
+            self.n_steps += 1
 
+            # update episode total reward
+            score += reward
 
-    def forward(self, obs, action_info:list):
-        '''
-            one time step train
+            # store experiences in memory
+            self.remember(observation, act_index, prob, val, reward, done)
 
-            obs: state obeservation
+            # determine if model needs to be optimized
+            if self.n_steps % self.STEP_UPDATE == 0:
+                self.optimize_model()
+                self.learn_iters += 1
 
-            action_info (list): action, probabilty and value
+            observation = observation_next
 
-            return:
-            - done: boolean, True if episode complete
-
-            - reward: int, reward gained from action
-
-            - obs_next: next state observation after action executed
-
-            - action_next: next action to execute bases on obs_next 
-
-        '''
-        # done = None
-        # reward = None
-        # obs_next = None
-        other_data = {}
-        loss = T.zeros(size=(self.n_epochs, self.batch_size, self.batch_size_info), dtype=T.float32)
-
-
-        action, prob, val = action_info
-        obs_next, reward, done, info = self.env.step(action)
-        self.n_steps += 1
-        self.remember(obs, action, prob, val, reward, done)
-        if self.n_steps % self.STEP_UPDATE == 0:
-            loss = self.optimize_model()
-            self.learn_iters += 1
-
-        # update other_data
-        other_data['loss'] = loss
-        other_data['info'] = info
-
-        return done, reward, obs_next, other_data
+        return t, score
 
     def get_action(self, observation):
         # return super().get_action(state)
@@ -543,8 +413,6 @@ class PPOAgent(Agent):
                 # print(total_loss.detach().item())
         self.memory.clear_memory()               
 
-
-
     def optimize_model(self):
         """Learn
         """
@@ -603,3 +471,43 @@ class PPOAgent(Agent):
                 # print(total_loss.detach().item())
         self.memory.clear_memory()
         # return losses
+
+
+    # def forward(self, obs, action_info:list):
+        #     '''
+        #         one time step train
+
+        #         obs: state obeservation
+
+        #         action_info (list): action, probabilty and value
+
+        #         return:
+        #         - done: boolean, True if episode complete
+
+        #         - reward: int, reward gained from action
+
+        #         - obs_next: next state observation after action executed
+
+        #         - action_next: next action to execute bases on obs_next 
+
+        #     '''
+        #     # done = None
+        #     # reward = None
+        #     # obs_next = None
+        #     other_data = {}
+        #     loss = T.zeros(size=(self.n_epochs, self.batch_size, self.batch_size_info), dtype=T.float32)
+
+
+        #     action, prob, val = action_info
+        #     obs_next, reward, done, info = self.env.step(action)
+        #     self.n_steps += 1
+        #     self.remember(obs, action, prob, val, reward, done)
+        #     if self.n_steps % self.STEP_UPDATE == 0:
+        #         loss = self.optimize_model()
+        #         self.learn_iters += 1
+
+        #     # update other_data
+        #     other_data['loss'] = loss
+        #     other_data['info'] = info
+
+        #     return done, reward, obs_next, other_data
