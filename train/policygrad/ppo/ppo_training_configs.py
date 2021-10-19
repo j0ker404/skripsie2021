@@ -28,6 +28,7 @@ action_table = [[0, 0, 0], # NOOP
 # env.seed(256)
 # random.seed(256)
 
+data_path = 'PPO_data/'
 
 # agent config
 STEP_UPDATE = 4096
@@ -41,17 +42,26 @@ n_epochs = 10
 
 
 # training config
-threshold = 195
+threshold = 0
 is_threshold_stop = False
 running_avg_len = 100
 is_progress = True
 EPISODES = 300
 EPISODES = 1000
 
+model_chkpt_path = data_path+'chkpts/'
+act_dim_1 = 64
+act_dim_2 = 64
+actor_dims = [*input_dims, act_dim_1, act_dim_2]
+
+crit_dim_1 = 64
+crit_dim_2 = 64
+critic_dims = [*input_dims, crit_dim_1, crit_dim_2]
 
 const = {
     'env': env,
-    'action_table': action_table
+    'action_table': action_table,
+    'PATH': data_path
 }
 
 
@@ -65,7 +75,10 @@ agent_config = {
     'batch_size': batch_size,
     'n_epochs': n_epochs,
     'STEP_UPDATE': STEP_UPDATE,
-    'verbose': False
+    'verbose': False,
+    'model_chkpt_path': model_chkpt_path,
+    'actor_dims': actor_dims,
+    'critic_dims': critic_dims
 }
 
 
@@ -83,4 +96,21 @@ CONST = Constants(const)
 agent_hyper = Config(agent_config)
 agent_training_configs = Config(training_configs)
 
-figure_file = 'plots/cartpole.png'
+base_plot_path = 'plots/'
+plot_path = data_path + base_plot_path
+# figure_file = plot_path+'cartpole.png'
+
+# create utility function for creating directors
+def create_dirs():
+    """Create required directors for
+        configuration
+    """
+    # create base data dir
+    if not os.path.exists(data_path):
+        os.makedirs(data_path)
+    # create model checkpoint dir
+    if not os.path.exists(model_chkpt_path):
+        os.makedirs(model_chkpt_path)
+    # create plot dir
+    if not os.path.exists(plot_path):
+        os.makedirs(plot_path)
