@@ -1,4 +1,6 @@
+from alphaslime.store.config import Config
 from alphaslime.store.constantConfig import Constants
+from alphaslime.trainer.datahelp.filename import FileName
 
 class Trainer:
     """ Base class for training an agent in
@@ -7,7 +9,7 @@ class Trainer:
     def __init__(self, CONSTANTS:Constants) -> None:
         self.CONSTANTS = CONSTANTS
 
-    def train(self, hyperparams:dict):
+    def train(self, training_config:Config, agent_config:Config, fileNamer:FileName, prefix=''):
         """Train agent with the given hyperparameters
 
         Args:
