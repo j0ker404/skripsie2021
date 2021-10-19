@@ -1,5 +1,5 @@
 from alphaslime.agents.agent import Agent
-from champion import Champions
+from alphaslime.trainer.selfplay.champion import Champions
 
 import os
 import fnmatch
