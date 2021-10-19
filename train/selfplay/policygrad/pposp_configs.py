@@ -8,10 +8,11 @@ import os
 PACKAGE_PARENT = '../../../'
 sys.path.append(PACKAGE_PARENT)
 
-import gym
 from alphaslime.agents.selfplay.policygrad.torch.ppoSP import PPO_SP
 from alphaslime.store.constantConfig import Constants
 from alphaslime.store.config import Config
+import gym
+import slimevolleygym
 
 # constant config
 env_id = "SlimeVolley-v0"
@@ -79,7 +80,7 @@ agent_config = {
     'batch_size': batch_size,
     'n_epochs': n_epochs,
     'STEP_UPDATE': STEP_UPDATE,
-    'verbose': False,
+    'verbose': True,
     'model_chkpt_path': model_chkpt_path,
     'actor_dims': actor_dims,
     'critic_dims': critic_dims
