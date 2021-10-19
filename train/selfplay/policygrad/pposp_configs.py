@@ -66,7 +66,8 @@ champ_min_avg_rew = -5
 const = {
     'env': env,
     'action_table': action_table,
-    'PATH': data_path
+    'PATH': data_path,
+    'env_id': env_id
 }
 
 
