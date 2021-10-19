@@ -4,9 +4,9 @@ from tqdm import tqdm
 from alphaslime.agents.RL.policygrad.torch.ppo import PPOAgent
 from alphaslime.envgame.spenv import SPenv
 from alphaslime.store.config import Config
-from alphaslime.trainer.selfplay.champion import Champions
 
-import copy
+import gym
+import slimevolleygym
 
 from alphaslime.trainer.selfplay.ppoChamps import PPOChampions
 
@@ -20,11 +20,12 @@ class PPO_SP(PPOAgent):
 
     def __init__(self, CONSTANTS: Config, config: Config) -> None:
         super().__init__(CONSTANTS, config)
-        self.env_orginal = copy.deepcopy(self.env)
+        self.env_id = CONSTANTS.get('env_id')
+        self.env_orginal = gym.make(self.env_id)
         self.CONSTANTS = CONSTANTS
         self.config = config
 
-    def train_selfplay(self, train_config: Config):
+    def train(self, train_config: Config):
         # load configs
         EPISODES =  train_config.get('EPISODES')
         is_progress =  train_config.get('is_progress')
