@@ -1,10 +1,10 @@
 #!/bin/bash
-#PBS -N slimePPOv4
+#PBS -N slimePPOSP
 #PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee:host=comp047
 #PBS -l walltime=1:00:00
 #PBS -m ae
-#PBS -e output4.err
-#PBS -o output4.out
+#PBS -e outSP.err
+#PBS -o outSP.out
 #PBS -M 21733902@sun.ac.za
 
 # make sure I'm the only one that can read my output
