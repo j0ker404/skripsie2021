@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N slimePPOSP
-#PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee:host=comp047
+#PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee:host=comp051
 #PBS -l walltime=1:00:00
 #PBS -m ae
 #PBS -e outSP.err
@@ -12,7 +12,7 @@ umask 0077
 # create a temporary directory with the job ID as name in /scratch-small-local
 SPACED="${PBS_JOBID//./-}" 
 # path for comp047
-TMP=/datahome/scratch-small-local/${SPACED} # E.g. 249926.hpc1.hpc
+TMP=/scratch-large-network/${SPACED} # E.g. 249926.hpc1.hpc
 mkdir -p ${TMP}
 echo "Temporary work dir: ${TMP}"
 
