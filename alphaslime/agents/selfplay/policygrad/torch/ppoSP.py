@@ -53,6 +53,7 @@ class PPO_SP(PPOAgent):
         for episode in ranger:
             # load new opponent
             opponent_path = champions.sample()
+            # print(opponent_path)
             if opponent_path is None:
                 opponent = None
             else:
@@ -82,6 +83,7 @@ class PPO_SP(PPOAgent):
             # threshold against prevoius agent
             if avg_reward-champ_prev_avg_score > champ_threshold:
                 champ_prev_avg_score = avg_reward
+                champions.append(self)
 
             if len(rewards_deque) == rewards_deque.maxlen:
                 # determine solved environment
