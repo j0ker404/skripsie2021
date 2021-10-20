@@ -20,7 +20,7 @@ see requirements.txt
     - opencv-python==4.5.3.56
     - pyglet==1.5.19
     - slimevolleygym==0.1.0
-
+    - tqdm
     install pytorch
      - pip3 install torch torchvision torchaudio
 
