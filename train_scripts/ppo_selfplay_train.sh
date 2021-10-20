@@ -40,7 +40,7 @@ pip install -r requirements.txt
 # install pytorch
 pip install torch torchvision torchaudio
 
-python /train/selfplay/policygrad/train.py
+python ./train/selfplay/policygrad/train.py
 
 # job done, copy everything back
 echo "Copying from ${TMP}/ to ${PBS_O_WORKDIR}/"
