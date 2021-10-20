@@ -38,6 +38,7 @@ echo "Copying from ${PBS_O_WORKDIR}/ to ${TMP}/"
 # requires custom git / pip dependancies not included in your conda env.
 pip install -r requirements.txt 
 # install pytorch
+pip install torch torchvision torchaudio
 
 python ../train/selfplay/policygrad/train.py
 
