@@ -19,8 +19,10 @@ class CriticNetwork(nn.Module):
         )
 
         self.optimizer = optim.Adam(self.parameters(), lr=alpha)
-        self.device = T.device('cuda:0' if T.cuda.is_available() else 'cpu')
+        # self.device = T.device('cuda:0' if T.cuda.is_available() else 'cpu')
+        self.device = T.device('cuda' if T.cuda.is_available() else 'cpu')
         self.to(self.device)
+        print('Critic Device used: {}'.format(self.device))
 
     def forward(self, state):
         value = self.critic(state)
