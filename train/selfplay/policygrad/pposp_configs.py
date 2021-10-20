@@ -58,6 +58,7 @@ running_avg_len = 100
 is_progress = True
 EPISODES = 300
 EPISODES = 1000
+EPISODES = 10
 
 champ_dir = data_path + 'champ/'
 champ_threshold = 0.5
