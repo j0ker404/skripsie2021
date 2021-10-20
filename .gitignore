@@ -16,3 +16,5 @@ other/cartpole/algs/policygrad/tmp
 other/cartpole/algs/policygrad/plots
 
 train/selfplay/policygrad/PPO_data
+
+PPO_data/
