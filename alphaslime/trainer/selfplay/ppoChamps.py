@@ -19,11 +19,19 @@ class PPOChampions(Champions):
         Returns:
             list: Paths of the champion's model
         """
+        if self.champ_counter == 0:
+            return None
         ran_index = random.randint(0, self.champ_counter-1)
-        pattern = self.base_path + str(ran_index)
+        # pattern = self.base_path + str(ran_index)+'_'+'*'+'.pt'
+        pattern = self.file_start+ str(ran_index)+'_'+'*'+'.pt'
+        # print(pattern)
+        # print(self.champ_dir)
         paths = PPOChampions.find(pattern, self.champ_dir)
+        # print(paths)
         if len(paths) == 0:
             return None
+        # sort document
+        paths.sort()
         return paths
 
     def append(self, agent:Agent):
