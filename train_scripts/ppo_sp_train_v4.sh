@@ -3,8 +3,8 @@
 #PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee:host=comp047
 #PBS -l walltime=1:00:00
 #PBS -m ae
-#PBS -e outputv4.err
-#PBS -o outputv4.out
+#PBS -e output4.err
+#PBS -o output4.out
 #PBS -M 21733902@sun.ac.za
 
 # make sure I'm the only one that can read my output
