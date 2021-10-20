@@ -2,11 +2,14 @@
     PPO trainer main funciton
 """
 import sys
+import os
 
 PACKAGE_PARENT = '../../../'
-sys.path.append(PACKAGE_PARENT)
+# sys.path.append(PACKAGE_PARENT)
 
-from alphaslime.agents.RL.policygrad.torch.ppo import PPOAgent
+SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
+sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
+
 from alphaslime.trainer.trainerSA import TrainerSA as Trainer
 import pposp_configs as PPOCONFIGS
 from alphaslime.trainer.datahelp.pg_agents import PGLearnFile
