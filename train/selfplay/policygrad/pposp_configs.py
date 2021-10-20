@@ -81,7 +81,7 @@ agent_config = {
     'batch_size': batch_size,
     'n_epochs': n_epochs,
     'STEP_UPDATE': STEP_UPDATE,
-    'verbose': False,
+    'verbose': True,
     'model_chkpt_path': model_chkpt_path,
     'actor_dims': actor_dims,
     'critic_dims': critic_dims
