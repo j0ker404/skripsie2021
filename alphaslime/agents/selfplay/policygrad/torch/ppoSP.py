@@ -82,7 +82,10 @@ class PPO_SP(PPOAgent):
 
             # threshold against prevoius agent
             if avg_reward-champ_prev_avg_score > champ_threshold:
-                champ_prev_avg_score = avg_reward
+                if opponent is not None:
+                    # only update champ_prev_avg_score when competing against
+                    # a non None player/random agent
+                    champ_prev_avg_score = avg_reward
                 champions.append(self)
 
             if len(rewards_deque) == rewards_deque.maxlen:
