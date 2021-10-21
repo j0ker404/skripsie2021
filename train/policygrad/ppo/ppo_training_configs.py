@@ -29,7 +29,7 @@ action_table = [[0, 0, 0], # NOOP
 # env.seed(256)
 # random.seed(256)
 
-data_path = 'PPO_data/'
+data_path = 'PPO_baseline_data/'
 
 # agent config
 STEP_UPDATE = 4096
@@ -41,6 +41,15 @@ policy_clip = 0.2
 batch_size = 64
 n_epochs = 10
 
+model_chkpt_path = data_path+'chkpts/'
+act_dim_1 = 64
+act_dim_2 = 64
+actor_dims = [*input_dims, act_dim_1, act_dim_2]
+
+crit_dim_1 = 64
+crit_dim_2 = 64
+critic_dims = [*input_dims, crit_dim_1, crit_dim_2]
+
 
 # training config
 threshold = 0
@@ -50,14 +59,11 @@ is_progress = True
 EPISODES = 300
 EPISODES = 1000
 
-model_chkpt_path = data_path+'chkpts/'
-act_dim_1 = 64
-act_dim_2 = 64
-actor_dims = [*input_dims, act_dim_1, act_dim_2]
-
-crit_dim_1 = 64
-crit_dim_2 = 64
-critic_dims = [*input_dims, crit_dim_1, crit_dim_2]
+# load prev trained models
+trained_actor_path = data_path + ''
+trained_critic_path = data_path + ''
+trained_model_path = [trained_actor_path, trained_critic_path]
+load_prev_trained = False
 
 const = {
     'env': env,
@@ -89,7 +95,9 @@ training_configs = {
     'is_progress': is_progress,
     'threshold': threshold, 
     'is_threshold_stop': is_threshold_stop,
-    'running_avg_len': running_avg_len
+    'running_avg_len': running_avg_len,
+    'load_prev_trained': load_prev_trained,
+    'trained_model_path': trained_model_path,
 }
 
 
