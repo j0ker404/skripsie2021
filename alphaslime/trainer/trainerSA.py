@@ -1,3 +1,4 @@
+from sys import path
 from alphaslime.agents.agent import Agent
 from alphaslime.store.config import Config
 from alphaslime.trainer.datahelp.filename import FileName
@@ -57,6 +58,11 @@ class TrainerSA(Trainer):
         # agent
         agent_type = training_config.get('agent_type') 
         agent = agent_type(self.CONSTANTS,agent_config)
+        is_load_models = training_config.get('load_prev_trained')  
+        if is_load_models:
+            # load pretrained models
+            path = training_config.get('trained_model_path')
+            agent.load_model(path)
         # train agent
         agent.train(training_config)
 
