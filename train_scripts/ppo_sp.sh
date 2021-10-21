@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N slimePPOSP
 #PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee:host=comp051
-#PBS -l walltime=00:10:00
+#PBS -l walltime=24:00:00
 #PBS -m ae
 #PBS -e outSP.err
 #PBS -o outSP.out
