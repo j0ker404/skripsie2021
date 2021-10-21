@@ -3,8 +3,8 @@
 #PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee:host=comp051
 #PBS -l walltime=24:00:00
 #PBS -m ae
-#PBS -e outSP.err
-#PBS -o outSP.out
+#PBS -e outSP_train.err
+#PBS -o outSP_train.out
 #PBS -M 21733902@sun.ac.za
 
 # make sure I'm the only one that can read my output
