@@ -47,4 +47,4 @@ class ActorNetwork(nn.Module):
             path (str): file path to load file
                         in the form of: $PATH$.pt
         """
-        self.load_state_dict(T.load(path))
+        self.load_state_dict(T.load(path, map_location=self.device))
