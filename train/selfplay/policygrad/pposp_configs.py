@@ -57,12 +57,18 @@ is_threshold_stop = False
 running_avg_len = 100
 is_progress = True
 EPISODES = 300
-EPISODES = 1000
+EPISODES = 2000
 # EPISODES = 5
 
 champ_dir = data_path + 'champ/'
 champ_threshold = 0.5
 champ_min_avg_rew = -5
+
+# load prev trained models
+trained_actor_path = data_path + 'gamma_0.99_alpha_0.0003_reward_1.56_model_actor.pt'
+trained_critic_path = data_path + 'gamma_0.99_alpha_0.0003_reward_1.56_model_critic.pt'
+trained_model_path = [trained_actor_path, trained_critic_path]
+load_prev_trained = True
 
 const = {
     'env': env,
@@ -98,7 +104,9 @@ training_configs = {
     'running_avg_len': running_avg_len,
     'champ_dir': champ_dir,
     'champ_threshold': champ_threshold,
-    'champ_min_avg_rew': champ_min_avg_rew
+    'champ_min_avg_rew': champ_min_avg_rew,
+    'load_prev_trained': load_prev_trained,
+    'trained_model_path': trained_model_path,
 }
 
 
