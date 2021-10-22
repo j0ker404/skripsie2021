@@ -42,7 +42,7 @@ pip install -r requirements.txt
 pip install torch torchvision torchaudio
 
 echo "Start Training"
-python ./train/selfplay/policygrad/train.py
+python ./train/selfplay/policygrad/train_cont.py
 echo "Stop Training"
 
 # job done, copy everything back
