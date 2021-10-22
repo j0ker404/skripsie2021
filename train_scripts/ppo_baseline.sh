@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N slimePPObase
-#PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee:host=comp055
+#PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee
 #PBS -l walltime=24:00:00
 #PBS -m ae
 #PBS -e outBase.err
