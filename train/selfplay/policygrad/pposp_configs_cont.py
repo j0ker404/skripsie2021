@@ -29,7 +29,7 @@ action_table = [[0, 0, 0], # NOOP
 # env.seed(256)
 # random.seed(256)
 
-data_path = 'PPO_data_cont/'
+data_path = 'PPO_data_cont2/'
 
 # agent config
 STEP_UPDATE = 4096
@@ -57,7 +57,7 @@ is_threshold_stop = False
 running_avg_len = 100
 is_progress = True
 EPISODES = 300
-EPISODES = 2000
+EPISODES = 1000
 # EPISODES = 5
 
 champ_dir = data_path + 'champ/'
