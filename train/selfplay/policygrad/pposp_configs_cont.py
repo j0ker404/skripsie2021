@@ -56,7 +56,7 @@ threshold = 0
 is_threshold_stop = False
 running_avg_len = 100
 is_progress = True
-EPISODES = 300
+# EPISODES = 300
 EPISODES = 1000
 # EPISODES = 5
 
