@@ -64,6 +64,7 @@ trained_actor_path = data_path + ''
 trained_critic_path = data_path + ''
 trained_model_path = [trained_actor_path, trained_critic_path]
 load_prev_trained = False
+best_score = -5
 
 const = {
     'env': env,
@@ -98,6 +99,7 @@ training_configs = {
     'running_avg_len': running_avg_len,
     'load_prev_trained': load_prev_trained,
     'trained_model_path': trained_model_path,
+    'best_score': best_score
 }
 
 

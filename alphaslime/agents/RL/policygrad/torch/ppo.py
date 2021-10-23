@@ -148,7 +148,9 @@ class PPOAgent(Agent):
         # self.avg_reward = 0
         self.n_steps = 0
         is_solved = False
-
+        best_score = train_config.get('best_score')
+        if best_score is not None:
+            self.best_score = best_score
         for episode in ranger:
             
             # train an episode

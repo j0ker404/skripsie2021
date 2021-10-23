@@ -50,6 +50,9 @@ class PPO_SP(PPOAgent):
         champ_threshold = train_config.get('champ_threshold')
         champ_min_avg_reward = train_config.get('champ_min_avg_rew')
         champ_prev_avg_score = champ_min_avg_reward
+        best_score = train_config.get('best_score')
+        if best_score is not None:
+            self.best_score = best_score
         for episode in ranger:
             # load new opponent
             opponent_path = champions.sample()
