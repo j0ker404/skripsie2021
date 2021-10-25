@@ -12,7 +12,7 @@ SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 
 from alphaslime.trainer.trainerSA import TrainerSA as Trainer
-import ppo_training_configs as PPOCONFIGS
+import ppo_training_configs_cont as PPOCONFIGS
 from alphaslime.trainer.datahelp.pg_agents import PGLearnFile
 
 
