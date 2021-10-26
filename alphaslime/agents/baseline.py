@@ -24,7 +24,12 @@ class BaselineAgent(Agent):
         """
         # action =  super().get_action(state)
         self.actions  = self.policy.predict(state)
-        action_index = self.action_table.index(self.actions )
+        try:
+            action_index = self.action_table.index(self.actions)
+        except ValueError:
+            # if no valid action, then action must be
+            # a no move i.o.w action 0
+            action_index = 0
         return action_index
 
 
