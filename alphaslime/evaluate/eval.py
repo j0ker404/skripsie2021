@@ -1,4 +1,6 @@
 from collections import deque
+import os
+import pickle
 import numpy as np
 from torch.functional import Tensor
 from alphaslime.agents.agent import Agent
@@ -18,8 +20,12 @@ class Evaluate:
         self.env = env
         self.delay = time_delay
 
+        # create dir if does not exist
+        if not os.path.exists(self.base_dir_path):
+            os.makedirs(self.base_dir_path)
+
     
-    def evaluate_episode(self):
+    def evaluate_episode(self, idx):
         '''
             Evaluate one episode
 
@@ -32,7 +38,9 @@ class Evaluate:
                 - save rewards
                 - save time step
 
-            
+            args:
+                idx (int): episode count
+
             return agent right score,
             one can infer agent left score
         '''
@@ -59,7 +67,7 @@ class Evaluate:
         
         # evaluate episodes
         for episode in ranger:
-            episode_reward = self.evaluate_episode()
+            episode_reward = self.evaluate_episode(episode)
             rewards_deque.append(episode_reward)
             avg_score = np.mean(rewards_deque)
             # append average reward at current epsiode
@@ -70,3 +78,18 @@ class Evaluate:
         self.env.close()
 
         return rewards, avg_rewards_array
+
+    
+    def save_episode(self, episode_index, episode_data):
+        """Save episode data to disk
+
+            Episode_data ~ [state_t, action_t, reward_t]
+
+        Args:
+            episode_index (int): episode index
+            episode_data (list): episode data
+        """
+
+        eps_path = os.path.join(self.base_dir_path, 'episode_'+str(episode_index)+'.pkl')
+        with open(eps_path, 'wb') as f:
+            pickle.dump(episode_data, f)
