@@ -56,6 +56,7 @@ is_progress = True
 EPISODES = 300
 EPISODES = 100000
 EPISODES = 1000
+EPISODES = 500
 
 # load prev trained model
 trained_model_path = ''
@@ -84,6 +85,7 @@ training_configs = {
     'agent_type': BCAgent,
     'EPISODES': EPISODES,
     'shuffle_batches': True,
+    'expert_episodes_data_path': expert_episodes_data_path,
     'is_progress': is_progress,
     'threshold': threshold, 
     'is_threshold_stop': is_threshold_stop,
