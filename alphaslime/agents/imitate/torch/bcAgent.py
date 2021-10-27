@@ -86,11 +86,12 @@ class BCAgent(Agent):
         loss_fn = self.policyNet.loss_func
 
         loss_epoch = []
+        self.max_loss_per_eps = None
         for epoch in ranger:
             print(f"Epoch {epoch+1}\n-------------------------------")
             size = len(expert_episodes_dataloader.dataset)
             
-            max_loss_per_eps = 1000
+            self.max_loss_per_eps = 1000
             episodes_loss_per_batch = []
             for batch, X in enumerate(expert_episodes_dataloader):
                 print('Batch {} of epoch {}'.format(batch, epoch))
@@ -125,8 +126,8 @@ class BCAgent(Agent):
                             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
 
                         loss_per_episode += loss.item()
-                        if loss_per_episode > max_loss_per_eps:
-                            max_loss_per_eps = loss_per_episode
+                        if loss_per_episode > self.max_loss_per_eps:
+                            self.max_loss_per_eps = loss_per_episode
                     # store total loss per episode
                     batch_episodes_loss.append(loss_per_episode)
                 # store losses per episode for batch
