@@ -144,19 +144,15 @@ class EvaluateGameSA(Evaluate):
         self.agent = agent
 
     
-    def evaluate_episode(self):
+    def evaluate_episode(self, idx):
         '''
             Evaluate one episode
 
             Episode terminates when either agent loses all five lives, 
             or after 3000 timesteps has passed.
-            
-            #TODO: save data to a file
-                - save state
-                - save actions
-                - save rewards
-                - save time step
-
+        
+            args:
+                idx (int): episode count
             
             return agent right score,
             one can infer agent left score
@@ -165,11 +161,12 @@ class EvaluateGameSA(Evaluate):
 
         done = False
         total_reward = 0
-
+        episode_data = []
         # time step counter
         t = 0
         # start episode
         while not done:
+            state_t = obs1
             action_data = self.agent.get_action(obs1)
             try:
                 # Assume that action data is a
@@ -198,4 +195,9 @@ class EvaluateGameSA(Evaluate):
                 self.env.render()
                 # sleep
                 time.sleep(self.delay)
+            episode_time_step_data = [state_t, action_index, reward]
+            episode_data.append(episode_time_step_data)
+
+        # save episode data
+        self.save_episode(idx, episode_data)
         return total_reward

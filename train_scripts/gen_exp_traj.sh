@@ -1,10 +1,10 @@
 #!/bin/bash
-#PBS -N slimePPObaseCont
-#PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee:host=comp055
-#PBS -l walltime=70:00:00
+#PBS -N ExpTrajGen
+#PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee
+#PBS -l walltime=50:00:00
 #PBS -m ae
-#PBS -e outBaseCont.err
-#PBS -o outBaseCont.out
+#PBS -e expTraj.err
+#PBS -o expTraj.out
 #PBS -M 21733902@sun.ac.za
 
 # make sure I'm the only one that can read my output
@@ -41,9 +41,9 @@ pip install -r requirements.txt
 # install pytorch
 pip install torch torchvision torchaudio
 
-echo "Start Training with baseline"
-python ./train/policygrad/ppo/train.py
-echo "Stop Training"
+echo "Start Generating with baseline"
+python ./train/imitate/episodes/gen_eps_baseline.py
+echo "Stop Generating"
 
 # job done, copy everything back
 echo "Copying from ${TMP}/ to ${PBS_O_WORKDIR}/"
