@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N slimePPObaseCont
 #PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee
-#PBS -l walltime=30:00:00
+#PBS -l walltime=70:00:00
 #PBS -m ae
 #PBS -e outBaseCont.err
 #PBS -o outBaseCont.out
