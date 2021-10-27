@@ -91,7 +91,7 @@ class BCAgent(Agent):
             print(f"Epoch {epoch+1}\n-------------------------------")
             size = len(expert_episodes_dataloader.dataset)
             
-            self.max_loss_per_eps = 1000
+            self.min_loss_per_eps = 1000
             episodes_loss_per_batch = []
             for batch, X in enumerate(expert_episodes_dataloader):
                 print('Batch {} of epoch {}'.format(batch, epoch))
@@ -126,8 +126,8 @@ class BCAgent(Agent):
                             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
 
                         loss_per_episode += loss.item()
-                        if loss_per_episode > self.max_loss_per_eps:
-                            self.max_loss_per_eps = loss_per_episode
+                        if loss_per_episode < self.min_loss_per_eps:
+                            self.min_loss_per_eps = loss_per_episode
                     # store total loss per episode
                     batch_episodes_loss.append(loss_per_episode)
                 # store losses per episode for batch
@@ -137,7 +137,7 @@ class BCAgent(Agent):
             loss_epoch.append(episodes_loss_per_batch)
             
             # save model after each epoch
-            path = self.MODEL_CHECKPOINT_PATH + 'epoch_' + str(epoch) + '_loss_' + str(max_loss_per_eps)
+            path = self.MODEL_CHECKPOINT_PATH + 'epoch_' + str(epoch) + '_loss_' + str(self.min_loss_per_eps)
             self.save_model(path)
 
         # store loss data is loss_list
