@@ -7,6 +7,7 @@ from alphaslime.store.config import Config
 from other.cartpole.algs.policygrad.ppo_training_configs import EPISODES
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+import numpy as np
 
 class BCAgent(Agent):
 
@@ -18,8 +19,6 @@ class BCAgent(Agent):
         self.batch_size = config.get('batch_size')
         self.n_epochs = config.get('n_epochs')
 
-        # after how many time steps, learning occurs
-        self.STEP_UPDATE = config.get('STEP_UPDATE') 
         self.verbose = config.get('verbose') 
 
         self.MODEL_CHECKPOINT_PATH = config.get('model_chkpt_path')
@@ -91,17 +90,15 @@ class BCAgent(Agent):
             print(f"Epoch {epoch+1}\n-------------------------------")
             size = len(expert_episodes_dataloader.dataset)
             
-            self.min_loss_per_eps = 1000
-            episodes_loss_per_batch = []
+            loss_per_batch = []
             for batch, X in enumerate(expert_episodes_dataloader):
                 print('Batch {} of epoch {}'.format(batch, epoch))
                 batch_episodes_loss = []
-                # X episode paths
-                
+                loss = T.zeros([])
+                # X episode paths, len(X)=batch_size
                 # for each episode
                 for episode_path in X:
 
-                    loss_per_episode = 0
                     episode_data = EpisodeDataset(episode_path)
                     # iterate through each time step of episode
                     for state_t, actions_t_index, reward_t in episode_data:
@@ -114,30 +111,26 @@ class BCAgent(Agent):
                         state_Tensor = T.tensor(state_t, dtype=T.float).to(self.policyNet.device)
                         # Compute prediction and loss
                         pred_action = self.policyNet(state_Tensor)
-                        loss = loss_fn(pred_action, action_t)
+                        loss += loss_fn(pred_action, action_t)
+                        
+                # Backpropagation
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
 
-                        # Backpropagation
-                        optimizer.zero_grad()
-                        loss.backward()
-                        optimizer.step()
+                if batch % 100 == 0 and self.verbose:
+                    loss_item, current = loss.item(), batch * len(X)
+                    print(f"loss: {loss_item:>7f}  [{current:>5d}/{size:>5d}]")
 
-                        if batch % 100 == 0 and self.verbose:
-                            loss, current = loss.item(), batch * len(X)
-                            print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
-
-                        loss_per_episode += loss.item()
-                        if loss_per_episode < self.min_loss_per_eps:
-                            self.min_loss_per_eps = loss_per_episode
-                    # store total loss per episode
-                    batch_episodes_loss.append(loss_per_episode)
-                # store losses per episode for batch
-                episodes_loss_per_batch.append(batch_episodes_loss)
+                # store total loss per batch
+                loss_per_batch.append(loss.item())
 
             # store total losses for all batches per epoch
-            loss_epoch.append(episodes_loss_per_batch)
+            loss_epoch.append(loss_per_batch)
             
+            latest_epoch_loss = np.max(loss_per_batch)
             # save model after each epoch
-            path = self.MODEL_CHECKPOINT_PATH + 'epoch_' + str(epoch) + '_loss_' + str(self.min_loss_per_eps)
+            path = self.MODEL_CHECKPOINT_PATH + 'epoch_' + str(epoch) + '_loss_' + str(latest_epoch_loss)
             self.save_model(path)
 
         # store loss data is loss_list
