@@ -33,6 +33,7 @@ action_table = [[0, 0, 0], # NOOP
 # random.seed(256)
 
 expert_episodes_data_path = 'Expert_Episodes_data/'
+expert_episodes_data_path = 'Expert_Episodes/'
 model_data_path = 'BC_data/'
 
 # agent config
