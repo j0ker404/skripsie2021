@@ -32,13 +32,16 @@ class EvaluateGameMA(Evaluate):
         self.agent_left = agent_left
 
     
-    def evaluate_episode(self):
+    def evaluate_episode(self, idx):
         '''
             Evaluate one episode
 
             Episode terminates when either agent loses all five lives, 
             or after 3000 timesteps has passed.
             
+            args:
+                idx (int): Current episode index
+
             #TODO: save data to a file
                 - save state
                 - save actions
