@@ -104,7 +104,7 @@ class BCAgent(Agent):
                     for state_t, actions_t_index, reward_t in episode_data:
                         
                         # create an one-hot tensor for action_t_index
-                        action_t = T.zeros((len(self.action_table),))
+                        action_t = T.zeros((len(self.action_table),), device=self.policyNet.device)
                         action_t[actions_t_index] = 1
 
                         # convert state to Tensor
