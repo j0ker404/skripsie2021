@@ -42,7 +42,7 @@ pip install -r requirements.txt
 pip install torch torchvision torchaudio
 
 echo "Start Training"
-python ./train/imitate/bc/train.py
+python ./other/cartpole/algs/policygrad/train.py
 echo "Stop Training"
 
 # job done, copy everything back
