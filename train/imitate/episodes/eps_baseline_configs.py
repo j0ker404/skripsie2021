@@ -27,11 +27,13 @@ action_table = [[0, 0, 0], # NOOP
                 [0, 1, 0]] # RIGHT (backward)
 
 data_path = 'Expert_Episodes_data/'
+data_path = 'Expert_Episodes/'
 
 
 # eval config
 EPISODES = 300
 EPISODES = 100000
+EPISODES = 10000
 is_progress_bar = True 
 running_avg_len = 100
 
