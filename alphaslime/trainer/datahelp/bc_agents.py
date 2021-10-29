@@ -20,6 +20,6 @@ class BCLearnFile(FileName):
         if type(alpha) == torch.Tensor:
             alpha = alpha.item()
 
-        min_loss = agent.min_loss_per_eps
+        min_loss = agent.latest_epoch_loss
         file_info = "alpha_{:.8}_loss_{:.5}".format(str(alpha), str(min_loss)) 
         return file_info
