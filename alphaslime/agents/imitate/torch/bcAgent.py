@@ -110,7 +110,9 @@ class BCAgent(Agent):
                         # convert state to Tensor
                         state_Tensor = T.tensor(state_t, dtype=T.float).to(self.policyNet.device)
                         # Compute prediction and loss
-                        pred_action = self.policyNet(state_Tensor)
+                        pred_action = self.policyNet(state_Tensor).to(self.policyNet.device)
+                        print('pred_action.device = {}'.format(pred_action.device))
+                        print('action_t.device = {}'.format(action_t.device))
                         loss += loss_fn(pred_action, action_t)
                         
                 # Backpropagation
