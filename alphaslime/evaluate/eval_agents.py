@@ -147,7 +147,7 @@ class EvaluateGameSA(Evaluate):
         self.agent = agent
 
     
-    def evaluate_episode(self, idx):
+    def evaluate_episode(self, idx, save=False):
         '''
             Evaluate one episode
 
@@ -202,5 +202,6 @@ class EvaluateGameSA(Evaluate):
             episode_data.append(episode_time_step_data)
 
         # save episode data
-        self.save_episode(idx, episode_data)
+        if save:
+            self.save_episode(idx, episode_data)
         return total_reward
