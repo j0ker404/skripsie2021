@@ -32,7 +32,7 @@ class EvaluateGameMA(Evaluate):
         self.agent_left = agent_left
 
     
-    def evaluate_episode(self, idx):
+    def evaluate_episode(self, idx, save=True):
         '''
             Evaluate one episode
 

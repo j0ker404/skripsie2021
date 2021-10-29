@@ -47,7 +47,7 @@ class Evaluate:
         episode_reward = 0
         return episode_reward
         
-    def evaluate(self, EPISODES, is_progress_bar=False, running_avg_len=100):
+    def evaluate(self, EPISODES, is_progress_bar=False, running_avg_len=100, save=True):
         """Evaluate agent performance for given number of episodes
 
         Args:
@@ -67,7 +67,7 @@ class Evaluate:
         
         # evaluate episodes
         for episode in ranger:
-            episode_reward = self.evaluate_episode(episode)
+            episode_reward = self.evaluate_episode(episode, save)
             rewards_deque.append(episode_reward)
             avg_score = np.mean(rewards_deque)
             # append average reward at current epsiode
