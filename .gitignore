@@ -19,6 +19,17 @@ train/selfplay/policygrad/PPO_data
 
 # PPO_data/
 
+<<<<<<< Updated upstream
 eps/
 PPO_data_old/
 Expert_Episodes_data/
+=======
+Expert_Episodes_data/
+
+Expert_Episodes/
+>>>>>>> Stashed changes
+
+output_data/
+
+*.err
+*.out
