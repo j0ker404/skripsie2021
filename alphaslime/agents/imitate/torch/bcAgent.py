@@ -146,7 +146,7 @@ class BCAgent(Agent):
             act:Tensor = self.policyNet(state)
             action_index = act.argmax()
         
-        print(action_index)
+        # print(action_index)
         return action_index
 
     def forward(self, obs, action):
