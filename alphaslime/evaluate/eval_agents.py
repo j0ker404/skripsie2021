@@ -147,7 +147,7 @@ class EvaluateGameSA(Evaluate):
         self.agent = agent
 
     
-    def evaluate_episode(self, idx, save=False):
+    def evaluate_episode(self, idx, save=True):
         '''
             Evaluate one episode
 
