@@ -94,7 +94,7 @@ class BCAgent(Agent):
             for batch, X in enumerate(expert_episodes_dataloader):
                 print('Batch {} of epoch {}'.format(batch, epoch))
                 batch_episodes_loss = []
-                loss = T.zeros([])
+                loss = T.zeros([]).to(self.policyNet.device)
                 # X episode paths, len(X)=batch_size
                 # for each episode
                 for episode_path in X:
