@@ -85,7 +85,7 @@ class BCAgent(Agent):
         loss_fn = self.policyNet.loss_func
 
         loss_epoch = []
-        self.max_loss_per_eps = None
+        self.latest_epoch_loss = None
         for epoch in ranger:
             print(f"Epoch {epoch+1}\n-------------------------------")
             size = len(expert_episodes_dataloader.dataset)
@@ -130,9 +130,9 @@ class BCAgent(Agent):
             # store total losses for all batches per epoch
             loss_epoch.append(loss_per_batch)
             
-            latest_epoch_loss = np.max(loss_per_batch)
+            self.latest_epoch_loss = np.max(loss_per_batch)
             # save model after each epoch
-            path = self.MODEL_CHECKPOINT_PATH + 'epoch_' + str(epoch) + '_loss_' + str(latest_epoch_loss)
+            path = self.MODEL_CHECKPOINT_PATH + 'epoch_' + str(epoch) + '_loss_' + str(self.latest_epoch_loss)
             self.save_model(path)
 
         # store loss data is loss_list
