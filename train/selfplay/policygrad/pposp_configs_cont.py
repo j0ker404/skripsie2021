@@ -30,6 +30,7 @@ action_table = [[0, 0, 0], # NOOP
 # random.seed(256)
 
 data_path = 'PPO_data_cont/'
+data_path = 'PPO_data_2/'
 
 # agent config
 STEP_UPDATE = 4096
@@ -62,14 +63,15 @@ EPISODES = 2000
 
 champ_dir = data_path + 'champ/'
 champ_threshold = 0.5
-champ_min_avg_rew = 4.03
+champ_min_avg_rew = 1.06
+champ_counter = 3
 
 # load prev trained models
-trained_actor_path = data_path + 'gamma_0.99_alpha_0.0003_reward_4.53_model_actor.pt'
-trained_critic_path = data_path + 'gamma_0.99_alpha_0.0003_reward_4.53_model_critic.pt'
+trained_actor_path = data_path + 'gamma_0.99_alpha_0.0003_reward_1.56_model_actor.pt'
+trained_critic_path = data_path + 'gamma_0.99_alpha_0.0003_reward_1.56_model_critic.pt'
 trained_model_path = [trained_actor_path, trained_critic_path]
 load_prev_trained = True
-best_score = 4.53
+best_score = 1.56
 
 const = {
     'env': env,
@@ -108,7 +110,8 @@ training_configs = {
     'champ_min_avg_rew': champ_min_avg_rew,
     'load_prev_trained': load_prev_trained,
     'trained_model_path': trained_model_path,
-    'best_score': best_score
+    'best_score': best_score,
+    'champ_counter': champ_counter
 }
 
 

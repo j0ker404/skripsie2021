@@ -47,6 +47,8 @@ class PPO_SP(PPOAgent):
         # load champ list
         champ_dir = train_config.get('champ_dir')
         champions = PPOChampions(champ_dir)
+        champ_counter = train_config.get('champ_counter')
+        champions.champ_counter = champ_counter
         champ_threshold = train_config.get('champ_threshold')
         champ_min_avg_reward = train_config.get('champ_min_avg_rew')
         champ_prev_avg_score = champ_min_avg_reward
