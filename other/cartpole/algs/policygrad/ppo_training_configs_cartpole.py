@@ -25,6 +25,7 @@ action_table = [0,1]
 # random.seed(256)
 
 data_path = 'PPO_cartpole_data_cont/'
+data_path = 'PPO_cartpole_data/'
 
 # agent config
 STEP_UPDATE = 20
@@ -37,12 +38,12 @@ batch_size = 5
 n_epochs = 4
 
 model_chkpt_path = data_path+'chkpts/'
-act_dim_1 = 16
-act_dim_2 = 16
+act_dim_1 = 128
+act_dim_2 = 128
 actor_dims = [*input_dims, act_dim_1, act_dim_2]
 
-crit_dim_1 = 16
-crit_dim_2 = 16
+crit_dim_1 = 128
+crit_dim_2 = 128
 critic_dims = [*input_dims, crit_dim_1, crit_dim_2]
 
 
