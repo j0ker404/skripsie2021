@@ -34,11 +34,13 @@ action_table = [[0, 0, 0], # NOOP
 
 expert_episodes_data_path = 'Expert_Episodes/'
 model_data_path = 'BC_data_extend/'
+model_data_path = 'BC_data_extend_2/'
 
 # agent config
 alpha = 0.0003
 batch_size = 64
 n_epochs = 10
+n_epochs = 30
 input_dims = env.observation_space.shape
 layer_dim_1 = 64
 layer_dim_2 = 64
