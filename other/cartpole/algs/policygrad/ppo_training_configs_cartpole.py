@@ -28,7 +28,7 @@ data_path = 'PPO_cartpole_data_cont/'
 data_path = 'PPO_cartpole_data/'
 
 # agent config
-STEP_UPDATE = 20
+STEP_UPDATE = 120
 input_dims = env.observation_space.shape
 gamma = 0.99
 alpha = 0.0003
@@ -38,12 +38,12 @@ batch_size = 5
 n_epochs = 4
 
 model_chkpt_path = data_path+'chkpts/'
-act_dim_1 = 128
-act_dim_2 = 128
+act_dim_1 = 64
+act_dim_2 = 64
 actor_dims = [*input_dims, act_dim_1, act_dim_2]
 
-crit_dim_1 = 128
-crit_dim_2 = 128
+crit_dim_1 = 64
+crit_dim_2 = 64
 critic_dims = [*input_dims, crit_dim_1, crit_dim_2]
 
 
