@@ -62,7 +62,7 @@ EPISODES = 500
 EPISODES = 1000
 
 # load prev trained model
-trained_model_path = model_data_path + 'alpha_0.0003_loss_14896_model_bc.pt'
+trained_model_path = model_data_path + 'alpha_0.0003_loss_8868._model_bc.pt'
 load_prev_trained = True
 
 const = {
