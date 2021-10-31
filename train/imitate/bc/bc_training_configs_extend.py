@@ -34,7 +34,7 @@ action_table = [[0, 0, 0], # NOOP
 
 expert_episodes_data_path = 'Expert_Episodes/'
 model_data_path = 'BC_data_extend/'
-model_data_path = 'BC_data_extend_2/'
+# model_data_path = 'BC_data_extend_2/'
 
 # agent config
 alpha = 0.0003
@@ -62,8 +62,8 @@ EPISODES = 500
 EPISODES = 1000
 
 # load prev trained model
-trained_model_path = ''
-load_prev_trained = False
+trained_model_path = model_data_path + 'alpha_0.0003_loss_8868._model_bc.pt'
+load_prev_trained = True
 
 const = {
     'env': env,
