@@ -38,12 +38,12 @@ batch_size = 5
 n_epochs = 4
 
 model_chkpt_path = data_path+'chkpts/'
-act_dim_1 = 64
-act_dim_2 = 64
+act_dim_1 = 512
+act_dim_2 = 512
 actor_dims = [*input_dims, act_dim_1, act_dim_2]
 
-crit_dim_1 = 64
-crit_dim_2 = 64
+crit_dim_1 = 512
+crit_dim_2 = 512
 critic_dims = [*input_dims, crit_dim_1, crit_dim_2]
 
 
