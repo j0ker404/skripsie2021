@@ -41,6 +41,7 @@ alpha = 0.0003
 batch_size = 64
 n_epochs = 10
 n_epochs = 30
+n_epochs = 60
 input_dims = env.observation_space.shape
 layer_dim_1 = 64
 layer_dim_2 = 64
@@ -62,7 +63,7 @@ EPISODES = 500
 EPISODES = 1000
 
 # load prev trained model
-trained_model_path = model_data_path + 'alpha_0.0003_loss_8868._model_bc.pt'
+trained_model_path = model_data_path + 'alpha_0.0003_loss_7632._model_bc.pt'
 load_prev_trained = True
 
 const = {
