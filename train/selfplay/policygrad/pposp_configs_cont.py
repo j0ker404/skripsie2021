@@ -63,15 +63,15 @@ EPISODES = 2000
 
 champ_dir = data_path + 'champ/'
 champ_threshold = 0.5
-champ_min_avg_rew = 1.06
-champ_counter = 3
+champ_min_avg_rew = 4.08
+champ_counter = 7
 
 # load prev trained models
-trained_actor_path = data_path + 'gamma_0.99_alpha_0.0003_reward_1.56_model_actor.pt'
-trained_critic_path = data_path + 'gamma_0.99_alpha_0.0003_reward_1.56_model_critic.pt'
+trained_actor_path = data_path + 'gamma_0.99_alpha_0.0003_reward_4.58_model_actor.pt'
+trained_critic_path = data_path + 'gamma_0.99_alpha_0.0003_reward_4.58_model_critic.pt'
 trained_model_path = [trained_actor_path, trained_critic_path]
 load_prev_trained = True
-best_score = 1.56
+best_score = 4.58
 
 const = {
     'env': env,
