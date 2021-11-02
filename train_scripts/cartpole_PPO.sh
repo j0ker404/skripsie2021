@@ -3,8 +3,8 @@
 #PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee
 #PBS -l walltime=24:00:00
 #PBS -m ae
-#PBS -e CPTrainPPO_3.err
-#PBS -o CPTrainPPO_3.out
+#PBS -e CPTrainPPO_4.err
+#PBS -o CPTrainPPO_4.out
 #PBS -M 21733902@sun.ac.za
 
 # make sure I'm the only one that can read my output
