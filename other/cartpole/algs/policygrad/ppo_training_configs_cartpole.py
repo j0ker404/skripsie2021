@@ -26,6 +26,7 @@ action_table = [0,1]
 
 data_path = 'PPO_cartpole_data_cont/'
 data_path = 'PPO_cartpole_data/'
+data_path = 'PPO_cartpole_data_1k/'
 
 # agent config
 STEP_UPDATE = 120
@@ -38,12 +39,12 @@ batch_size = 5
 n_epochs = 4
 
 model_chkpt_path = data_path+'chkpts/'
-act_dim_1 = 512
-act_dim_2 = 512
+act_dim_1 = 200
+act_dim_2 = 200
 actor_dims = [*input_dims, act_dim_1, act_dim_2]
 
-crit_dim_1 = 512
-crit_dim_2 = 512
+crit_dim_1 = 64
+crit_dim_2 = 64
 critic_dims = [*input_dims, crit_dim_1, crit_dim_2]
 
 
@@ -53,7 +54,7 @@ is_threshold_stop = False
 running_avg_len = 100
 is_progress = True
 EPISODES = 300
-EPISODES = 10000
+EPISODES = 1000
 
 # load prev trained models
 trained_actor_path = ''
