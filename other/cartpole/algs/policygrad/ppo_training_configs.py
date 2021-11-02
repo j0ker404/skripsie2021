@@ -14,7 +14,7 @@ from alphaslime.store.constantConfig import Constants
 from alphaslime.store.config import Config
 
 # constant config
-env_id = "CartPole-v0"
+env_id = "CartPole-v1"
 env = gym.make(env_id)
 
 # actions for slimeball
@@ -22,10 +22,11 @@ action_table = [0,1]
 
 # env.seed(256)
 # random.seed(256)
-data_path = 'PPO_data/'
+data_path = 'data_cart/'
 
 # agent config
 STEP_UPDATE = 20
+STEP_UPDATE = 120
 input_dims = env.observation_space.shape
 gamma = 0.99
 alpha = 0.0003
@@ -35,21 +36,28 @@ batch_size = 5
 n_epochs = 4
 
 model_chkpt_path = data_path+'chkpts/'
-act_dim_1 = 256
-act_dim_2 = 256
+act_dim_1 = 512
+act_dim_2 = 512
 actor_dims = [*input_dims, act_dim_1, act_dim_2]
 
-crit_dim_1 = 256
-crit_dim_2 = 256
+crit_dim_1 = 512
+crit_dim_2 = 512
 critic_dims = [*input_dims, crit_dim_1, crit_dim_2]
 
 # training config
 threshold = 195
-# threshold = 475
+threshold = 475
 is_threshold_stop = False
 running_avg_len = 100
 is_progress = True
 EPISODES = 1000
+
+# load prev trained models
+trained_actor_path = ''
+trained_critic_path = ''
+trained_model_path = [trained_actor_path, trained_critic_path]
+load_prev_trained = False
+best_score = 0
 
 const = {
     'env': env,
@@ -81,7 +89,10 @@ training_configs = {
     'is_progress': is_progress,
     'threshold': threshold, 
     'is_threshold_stop': is_threshold_stop,
-    'running_avg_len': running_avg_len
+    'running_avg_len': running_avg_len,
+    'load_prev_trained': load_prev_trained,
+    'trained_model_path': trained_model_path,
+    'best_score': best_score
 }
 
 
@@ -105,6 +116,4 @@ def create_dirs():
     # create model checkpoint dir
     if not os.path.exists(model_chkpt_path):
         os.makedirs(model_chkpt_path)
-    # create plot dir
-    if not os.path.exists(plot_path):
-        os.makedirs(plot_path)
+

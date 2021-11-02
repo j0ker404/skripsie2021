@@ -3,8 +3,8 @@
 #PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee
 #PBS -l walltime=70:00:00
 #PBS -m ae
-#PBS -e sp_3000.err
-#PBS -o sp_3000.out
+#PBS -e sp_5000.err
+#PBS -o sp_5000.out
 #PBS -M 21733902@sun.ac.za
 
 # make sure I'm the only one that can read my output

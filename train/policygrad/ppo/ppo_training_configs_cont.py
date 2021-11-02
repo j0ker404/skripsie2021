@@ -60,11 +60,11 @@ EPISODES = 300
 EPISODES = 1000
 
 # load prev trained models
-trained_actor_path = data_path + 'gamma_0.99_alpha_0.0003_reward_-2.84_model_actor.pt'
-trained_critic_path = data_path + 'gamma_0.99_alpha_0.0003_reward_-2.84_model_critic.pt'
+trained_actor_path = data_path + 'gamma_0.99_alpha_0.0003_reward_-0.22_model_actor.pt'
+trained_critic_path = data_path + 'gamma_0.99_alpha_0.0003_reward_-0.22_model_critic.pt'
 trained_model_path = [trained_actor_path, trained_critic_path]
 load_prev_trained = True
-best_score = -2.84
+best_score = -0.22
 
 const = {
     'env': env,
