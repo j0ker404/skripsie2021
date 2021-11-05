@@ -33,3 +33,5 @@ output_data/
 
 *.err
 *.out
+
+other/cartpole/algs/policygrad/data_cart
