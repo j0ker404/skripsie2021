@@ -8,9 +8,6 @@ sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
 from alphaslime.evaluate.eval_agents import EvaluateGameMA
 from alphaslime.agents.RL.policygrad.torch.ppo import PPOAgent
 from alphaslime.agents.imitate.torch.bcAgent import BCAgent
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 
 import gym
 import slimevolleygym
