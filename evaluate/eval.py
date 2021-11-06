@@ -87,7 +87,7 @@ def load_agents():
 
 
 if __name__ == '__main__':
-    eps = 1
+    eps = 1000
     base_dir_path = "./evaluate_data/"
     RENDER = False
     running_avg_len = 100
