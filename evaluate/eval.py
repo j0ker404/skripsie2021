@@ -99,11 +99,6 @@ if __name__ == '__main__':
 
     agents = load_agents()
     # Agent VS Agents
-    eps = 1000
-    base_dir_path = "./evaluate_data/"
-    RENDER = False
-    running_avg_len = 100
-    match_data = {}
     for agent_right_name, agent_right in agents:
         for agent_left_name, agent_left in agents:
 
