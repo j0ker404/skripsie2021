@@ -85,6 +85,17 @@ def load_agents():
     return agents
 
 
+def agents_dict():
+    """Return dictionary of trained agents
+    """
+
+    agents = {}
+    agents_list = load_agents()
+    for name, agent in agents_list:
+        agents[name] = agent
+
+    return agents 
+
 def load_baseline():
     """Load baseline agent
 
