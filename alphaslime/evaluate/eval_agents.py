@@ -17,6 +17,12 @@ import time
 
 from alphaslime.evaluate.eval import Evaluate
 
+# global variables for human control
+manualAction = [0, 0, 0] # forward, backward, jump
+otherManualAction = [0, 0, 0]
+manualMode = False
+otherManualMode = False
+
 class EvaluateGameMA(Evaluate):
     '''
         Multi-agent evalutaion
@@ -52,6 +58,39 @@ class EvaluateGameMA(Evaluate):
             return agent right score,
             one can infer agent left score
         '''
+
+        if self.RENDER:
+            from pyglet.window import key
+            from time import sleep
+
+        global manualMode, manualAction, otherManualMode, otherManualAction
+        # taken from https://github.com/openai/gym/blob/master/gym/envs/box2d/car_racing.py
+        def key_press(k, mod):
+            global manualMode, manualAction, otherManualMode, otherManualAction
+            if k == key.LEFT:  manualAction[0] = 1
+            if k == key.RIGHT: manualAction[1] = 1
+            if k == key.UP:    manualAction[2] = 1
+            if (k == key.LEFT or k == key.RIGHT or k == key.UP): manualMode = True
+
+            if k == key.D:     otherManualAction[0] = 1
+            if k == key.A:     otherManualAction[1] = 1
+            if k == key.W:     otherManualAction[2] = 1
+            if (k == key.D or k == key.A or k == key.W): otherManualMode = True
+
+        def key_release(k, mod):
+            global manualMode, manualAction, otherManualMode, otherManualAction
+            if k == key.LEFT:  manualAction[0] = 0
+            if k == key.RIGHT: manualAction[1] = 0
+            if k == key.UP:    manualAction[2] = 0
+            if k == key.D:     otherManualAction[0] = 0
+            if k == key.A:     otherManualAction[1] = 0
+            if k == key.W:     otherManualAction[2] = 0
+
+        if self.RENDER:
+            self.env.render()
+            self.env.viewer.window.on_key_press = key_press
+            self.env.viewer.window.on_key_release = key_release
+
         obs1 = self.env.reset()
         obs2 = obs1 # both sides always see the same initial observation.
 
@@ -102,11 +141,21 @@ class EvaluateGameMA(Evaluate):
             else:
                 action_left = self.agent_left.action_table[action_index_left] 
 
+            # human action
+            if manualMode: # override with keyboard
+                action_right = manualAction
+
+            if otherManualMode:
+                action_left = otherManualAction
+
             # go to next time step
             obs1, reward, done, info = self.env.step(action_right, action_left) # extra argument
             obs2 = info['otherObs'] #  opponent's observations
 
             total_reward += reward
+            if reward > 0 or reward < 0:
+                manualMode = False
+                otherManualMode = False
 
             # increment time step
             t += 1
@@ -160,6 +209,32 @@ class EvaluateGameSA(Evaluate):
             return agent right score,
             one can infer agent left score
         '''
+
+        if self.RENDER:
+            from pyglet.window import key
+            from time import sleep
+
+        # taken from https://github.com/openai/gym/blob/master/gym/envs/box2d/car_racing.py
+        global manualMode, manualAction
+        def key_press(k, mod):
+            global manualMode, manualAction
+            if k == key.LEFT:  manualAction[0] = 1
+            if k == key.RIGHT: manualAction[1] = 1
+            if k == key.UP:    manualAction[2] = 1
+            if (k == key.LEFT or k == key.RIGHT or k == key.UP): manualMode = True
+
+        def key_release(k, mod):
+            global manualMode, manualAction
+            if k == key.LEFT:  manualAction[0] = 0
+            if k == key.RIGHT: manualAction[1] = 0
+            if k == key.UP:    manualAction[2] = 0
+
+
+        if self.RENDER:
+            self.env.render()
+            self.env.viewer.window.on_key_press = key_press
+            self.env.viewer.window.on_key_release = key_release
+
         obs1 = self.env.reset()
 
         done = False
@@ -186,10 +261,18 @@ class EvaluateGameSA(Evaluate):
                 action = self.agent.action_table[action_index.item()]
             else:
                 action = self.agent.action_table[action_index] 
+
+            # human action
+            if manualMode: # override with keyboard
+                action = manualAction
+
             # go to next time step
             obs1, reward, done, info = self.env.step(action) # extra argument
 
             total_reward += reward
+            if reward > 0 or reward < 0:
+                manualMode = False
+
 
             # increment time step
             t += 1
