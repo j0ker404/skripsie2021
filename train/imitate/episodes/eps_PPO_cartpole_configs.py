@@ -27,7 +27,7 @@ data_path = 'Expert_CP_Episodes/'
 EPISODES = 1000
 is_progress_bar = True 
 running_avg_len = 100
-agent = TRAINED_AGENTS.agents_dict_cartpole['PPO_Agent']
+agent = TRAINED_AGENTS.agents_dict_cartpole()['PPO_Agent']
 
 const = {
     'env': env,
