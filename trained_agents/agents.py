@@ -1,5 +1,6 @@
 """
     Trained agents for Slime Volleyball environment
+    and cartpole-v1
 """
 
 import sys
@@ -14,6 +15,38 @@ from alphaslime.agents.baseline import BaselineAgent
 import gym
 import slimevolleygym
 
+def load_agents_cartpole():
+    # store are trained agents in a list
+    agents = []
+    # load PPO agent trained with baseline
+    print('loading: ppo_agent')
+    import trained_agents.ppo.cartpole.ppo_training_configs_cartpole as PPOCONFIGS
+    CONST = PPOCONFIGS.CONST
+    agent_config = PPOCONFIGS.agent_config
+    act_path =  os.path.join(SCRIPT_DIR,'ppo/cartpole/gamma_0.99_alpha_0.0003_reward_480.1_model_actor.pt')
+    crt_path =  os.path.join(SCRIPT_DIR,'ppo/cartpole/gamma_0.99_alpha_0.0003_reward_480.1_model_critic.pt')
+    paths = [act_path, crt_path]
+    ppo_agent = PPOAgent(CONSTANTS=CONST, config=agent_config)
+    ppo_agent.load_model(paths)
+    print('-'*10)
+
+    # store agents in list
+    agents.append(['PPO_Agent', ppo_agent])
+   
+   
+    return agents
+
+
+def agents_dict_cartpole():
+    """Return dictionary of trained agents
+    """
+
+    agents = {}
+    agents_list = load_agents()
+    for name, agent in agents_list:
+        agents[name] = agent
+
+    return agents 
 
 def load_agents():
     """Load trained agents
