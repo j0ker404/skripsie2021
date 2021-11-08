@@ -42,7 +42,7 @@ pip install -r requirements.txt
 pip install torch torchvision torchaudio
 
 echo "Start Generating with PPO"
-python ./train/imitate/episodes/gen_eps_cartpole.py
+python ./other/cartpole/algs/imitate/episodes/gen_eps_cartpole.py
 echo "Stop Generating"
 
 # job done, copy everything back
