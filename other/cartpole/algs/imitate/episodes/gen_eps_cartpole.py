@@ -5,7 +5,7 @@
 import sys
 import os
 
-PACKAGE_PARENT = '../../../'
+PACKAGE_PARENT = '../../../../../'
 # sys.path.append(PACKAGE_PARENT)
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
