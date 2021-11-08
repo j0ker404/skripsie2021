@@ -5,7 +5,7 @@
 import sys
 import os
 
-PACKAGE_PARENT = '../../../'
+PACKAGE_PARENT = '../../../../../'
 sys.path.append(PACKAGE_PARENT)
 
 import gym
