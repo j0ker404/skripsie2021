@@ -42,7 +42,7 @@ def agents_dict_cartpole():
     """
 
     agents = {}
-    agents_list = load_agents()
+    agents_list = load_agents_cartpole()
     for name, agent in agents_list:
         agents[name] = agent
 
