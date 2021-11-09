@@ -37,4 +37,4 @@ output_data/
 other/cartpole/algs/policygrad/data_cart
 
 Expert_CP_Episodes/
-Valid_*
+Valid_Expert_CP_Episodes/
