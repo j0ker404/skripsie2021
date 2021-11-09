@@ -1,10 +1,10 @@
 #!/bin/bash
-#PBS -N BCTrain_ES
+#PBS -N BCTrain_ES_2
 #PBS -l select=1:ncpus=12:mem=64GB:ngpus=1:Qlist=ee
 #PBS -l walltime=80:00:00
 #PBS -m ae
-#PBS -e bcES_1.err
-#PBS -o bcES_1.out
+#PBS -e bcES_2.err
+#PBS -o bcES_2.out
 #PBS -M 21733902@sun.ac.za
 
 # make sure I'm the only one that can read my output
