@@ -246,7 +246,8 @@ class BCAgentES(BCAgent):
 
         # store loss data is loss_list
         self.loss_list = loss_epoch
-        self.loss_list = valid_loss_epoch
+        # self.loss_list = valid_loss_epoch
+        self.valid_loss_list = valid_loss_epoch
 
         # load the last checkpoint with the best model
         self.policyNet.load_model(self.ES_CHKPT_PATH)
