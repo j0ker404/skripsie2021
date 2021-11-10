@@ -233,7 +233,8 @@ class BCAgentES(BCAgent):
 
     
             # store total valid losses for all batches per epoch
-            valid_loss_epoch.append(loss_per_batch)
+            # valid_loss_epoch.append(loss_per_batch) saved wrong loss data
+            valid_loss_epoch.append(valid_loss_per_batch)
 
             # early_stopping needs the validation loss to check if it has decresed, 
             # and if it has, it will make a checkpoint of the current model
