@@ -1,3 +1,8 @@
+'''
+    Based on code from:
+    https://github.com/philtabor/Youtube-Code-Repository/blob/master/ReinforcementLearning/PolicyGradient/PPO/torch/ppo_torch.py
+'''
+
 from collections import deque
 import os
 import numpy as np
