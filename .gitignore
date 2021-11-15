@@ -41,4 +41,5 @@ Valid_Expert_CP_Episodes/
 
 data/
 
-./train_scripts
+# ./train_scripts
+train_scripts/
